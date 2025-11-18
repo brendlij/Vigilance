@@ -27,33 +27,34 @@ export const getRandomBackground = (): BackgroundImage => {
  * Get a random unsplash image (backup option)
  * Using unsplash API for high-quality free images
  */
-export const getRandomBackgroundUnsplash = async (): Promise<BackgroundImage> => {
-  try {
-    // Using Unsplash API - random high-quality images
-    // Query: homelab, server room, technology, datacenter backgrounds
-    const query = "homelab OR server OR datacenter OR technology OR network";
-    const width = 1920;
-    const height = 1080;
+export const getRandomBackgroundUnsplash =
+  async (): Promise<BackgroundImage> => {
+    try {
+      // Using Unsplash API - random high-quality images
+      // Query: homelab, server room, technology, datacenter backgrounds
+      const query = "homelab OR server OR datacenter OR technology OR network";
+      const width = 1920;
+      const height = 1080;
 
-    const response = await fetch(
-      `https://api.unsplash.com/photos/random?query=${query}&w=${width}&h=${height}&client_id=YOUR_UNSPLASH_ACCESS_KEY`
-    );
+      const response = await fetch(
+        `https://api.unsplash.com/photos/random?query=${query}&w=${width}&h=${height}&client_id=YOUR_UNSPLASH_ACCESS_KEY`
+      );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch image");
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const data = await response.json();
+
+      return {
+        url: data.urls.regular,
+        credit: `Photo by ${data.user.name}`,
+      };
+    } catch (error) {
+      console.warn("Failed to fetch from Unsplash, using picsum.photos");
+      return getRandomBackground();
     }
-
-    const data = await response.json();
-
-    return {
-      url: data.urls.regular,
-      credit: `Photo by ${data.user.name}`,
-    };
-  } catch (error) {
-    console.warn("Failed to fetch from Unsplash, using picsum.photos");
-    return getRandomBackground();
-  }
-};
+  };
 
 /**
  * Local background options (no API key needed)
