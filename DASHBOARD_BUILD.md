@@ -3,6 +3,7 @@
 ## ✅ Completed Features
 
 ### 🎨 Modern UI with Pure CSS
+
 - **No frameworks required** - Built with pure CSS custom variables
 - **Glass morphism aesthetic** - Frosted glass effect with backdrop blur
 - **Dark theme optimized** - Eye-friendly dark background with transparent overlays
@@ -12,12 +13,15 @@
 ### 📊 Dashboard Components
 
 #### Widgets
-1. **Clock Widget** 
+
+1. **Clock Widget**
+
    - Real-time clock display with current time
    - Full date display (weekday, month, day, year)
    - Updates every second
 
 2. **Weather Widget**
+
    - Location display
    - Current temperature
    - Weather condition with icon
@@ -30,12 +34,14 @@
    - Color-coded indicators (blue, purple, orange)
 
 #### Quick Links Section
+
 - 6 quick-access links (Google, YouTube, GitHub, Reddit, Docker Hub, Stack Overflow)
 - Each link is a clickable card with icon and title
 - Customizable colors for each link
 - Easy to add more links
 
 #### Services Dashboard
+
 - Service cards showing:
   - Service name and description
   - Status indicator (Online/Offline with pulsing dot)
@@ -47,6 +53,7 @@
 ### 🏗️ Technical Architecture
 
 #### Frontend Stack
+
 - **Vue 3** - Modern composition API
 - **Vite** - Lightning-fast build tool
 - **TypeScript** - Type-safe development
@@ -56,6 +63,7 @@
 - **Bun** - Fast package manager
 
 #### File Structure
+
 ```
 src/
 ├── components/
@@ -81,6 +89,7 @@ src/
 ### 🎯 Key Design Features
 
 #### CSS Variables System
+
 - Complete color palette (primary, secondary, accents)
 - Spacing scale (xs through 2xl)
 - Typography system with 9 sizes
@@ -88,12 +97,14 @@ src/
 - Shadow definitions
 
 #### Glass Morphism
+
 - `.glass` class for card styling
 - Backdrop blur with browser fallback
 - Layered transparency effects
 - Smooth hover transitions
 
 #### Responsive Grid
+
 - `grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))`
 - Adapts from 1 column to 3+ automatically
 - Works on all screen sizes
@@ -101,6 +112,7 @@ src/
 ### 📦 State Management (Pinia)
 
 The dashboard store includes:
+
 - `services` - Array of service objects
 - `weather` - Weather data
 - `systemStats` - System resource stats
@@ -112,6 +124,7 @@ The dashboard store includes:
 ### 💾 Dummy Data System
 
 Located in `src/utils/dummyData.ts`:
+
 - `getDummyServices()` - 6 example services
 - `getDummyWeather()` - Sample weather data
 - `getDummySystemStats()` - Mock system stats
@@ -138,7 +151,9 @@ The dashboard runs at `http://localhost:5173/`
 ## 🎨 Customization Options
 
 ### Change Colors
+
 Edit CSS variables in `src/style.css`:
+
 ```css
 :root {
   --color-primary: #3b82f6;
@@ -149,7 +164,9 @@ Edit CSS variables in `src/style.css`:
 ```
 
 ### Add Services
+
 Update `src/utils/dummyData.ts`:
+
 ```typescript
 export const getDummyServices = (): Service[] => [
   // Add your services here
@@ -157,6 +174,7 @@ export const getDummyServices = (): Service[] => [
 ```
 
 ### Add Quick Links
+
 Modify the `getDummyQuickLinks()` function with your preferred links
 
 ## 🔮 Future Enhancements

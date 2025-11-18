@@ -7,9 +7,9 @@ All colors are defined as CSS variables in `src/style.css`. Edit them in the `:r
 ### Primary Colors
 
 ```css
---color-primary: #3b82f6;           /* Main blue accent */
---color-primary-light: #60a5fa;     /* Lighter blue for hover */
---color-primary-dark: #1e40af;      /* Darker blue for pressed */
+--color-primary: #3b82f6; /* Main blue accent */
+--color-primary-light: #60a5fa; /* Lighter blue for hover */
+--color-primary-dark: #1e40af; /* Darker blue for pressed */
 ```
 
 **Used for:** Links, primary buttons, interactive elements
@@ -17,9 +17,9 @@ All colors are defined as CSS variables in `src/style.css`. Edit them in the `:r
 ### Secondary Colors
 
 ```css
---color-secondary: #8b5cf6;         /* Purple accent */
---color-secondary-light: #a78bfa;   /* Lighter purple */
---color-secondary-dark: #6d28d9;    /* Darker purple */
+--color-secondary: #8b5cf6; /* Purple accent */
+--color-secondary-light: #a78bfa; /* Lighter purple */
+--color-secondary-dark: #6d28d9; /* Darker purple */
 ```
 
 **Used for:** Secondary elements, header gradient
@@ -27,11 +27,11 @@ All colors are defined as CSS variables in `src/style.css`. Edit them in the `:r
 ### Accent Colors
 
 ```css
---color-accent-orange: #f97316;     /* Disk usage, alerts */
---color-accent-green: #10b981;      /* Online status */
---color-accent-red: #ef4444;        /* Offline status, errors */
---color-accent-yellow: #eab308;     /* Weather, highlights */
---color-accent-purple: #a855f7;     /* Stats widget */
+--color-accent-orange: #f97316; /* Disk usage, alerts */
+--color-accent-green: #10b981; /* Online status */
+--color-accent-red: #ef4444; /* Offline status, errors */
+--color-accent-yellow: #eab308; /* Weather, highlights */
+--color-accent-purple: #a855f7; /* Stats widget */
 ```
 
 **Used for:** Status indicators, progress bars, category colors
@@ -39,41 +39,43 @@ All colors are defined as CSS variables in `src/style.css`. Edit them in the `:r
 ### Background Colors
 
 ```css
---color-bg-dark: #0f172a;           /* Main background */
---color-bg-darker: #020617;         /* Darker overlay background */
---color-bg-card: rgba(15, 23, 42, 0.8);  /* Card background */
+--color-bg-dark: #0f172a; /* Main background */
+--color-bg-darker: #020617; /* Darker overlay background */
+--color-bg-card: rgba(15, 23, 42, 0.8); /* Card background */
 ```
 
 ### Text Colors
 
 ```css
---color-text-primary: #ffffff;                      /* Main text */
---color-text-secondary: rgba(255, 255, 255, 0.7);  /* Secondary text */
---color-text-tertiary: rgba(255, 255, 255, 0.5);   /* Tertiary text */
---color-text-muted: rgba(255, 255, 255, 0.4);      /* Muted text */
+--color-text-primary: #ffffff; /* Main text */
+--color-text-secondary: rgba(255, 255, 255, 0.7); /* Secondary text */
+--color-text-tertiary: rgba(255, 255, 255, 0.5); /* Tertiary text */
+--color-text-muted: rgba(255, 255, 255, 0.4); /* Muted text */
 ```
 
 ### Border Colors
 
 ```css
---color-border: rgba(255, 255, 255, 0.1);          /* Light border */
---color-border-light: rgba(255, 255, 255, 0.2);    /* Medium border */
---color-border-hover: rgba(255, 255, 255, 0.3);    /* Hover border */
+--color-border: rgba(255, 255, 255, 0.1); /* Light border */
+--color-border-light: rgba(255, 255, 255, 0.2); /* Medium border */
+--color-border-hover: rgba(255, 255, 255, 0.3); /* Hover border */
 ```
 
 ### Glass Effect
 
 ```css
---color-glass-light: rgba(255, 255, 255, 0.1);     /* Light glass */
---color-glass-lighter: rgba(255, 255, 255, 0.05);  /* Extra light */
+--color-glass-light: rgba(255, 255, 255, 0.1); /* Light glass */
+--color-glass-lighter: rgba(255, 255, 255, 0.05); /* Extra light */
 ```
 
 ## Pre-made Color Schemes
 
 ### Dark Mode (Current Default)
+
 Already configured - perfect for evening/night use
 
 ### Light Mode
+
 To switch to light mode, replace the colors:
 
 ```css
@@ -91,6 +93,7 @@ To switch to light mode, replace the colors:
 ```
 
 ### Ocean Theme
+
 Blue-dominant with cyan accents:
 
 ```css
@@ -104,6 +107,7 @@ Blue-dominant with cyan accents:
 ```
 
 ### Forest Theme
+
 Green-dominant with earth tones:
 
 ```css
@@ -121,25 +125,25 @@ Green-dominant with earth tones:
 ### Font Sizes
 
 ```css
---font-size-xs: 0.75rem;     /* 12px */
---font-size-sm: 0.875rem;    /* 14px */
---font-size-md: 1rem;        /* 16px - base */
---font-size-lg: 1.125rem;    /* 18px */
---font-size-xl: 1.25rem;     /* 20px */
---font-size-2xl: 1.5rem;     /* 24px */
---font-size-3xl: 2rem;       /* 32px */
---font-size-4xl: 2.5rem;     /* 40px */
---font-size-5xl: 3rem;       /* 48px */
---font-size-6xl: 3.75rem;    /* 60px - Clock size */
+--font-size-xs: 0.75rem; /* 12px */
+--font-size-sm: 0.875rem; /* 14px */
+--font-size-md: 1rem; /* 16px - base */
+--font-size-lg: 1.125rem; /* 18px */
+--font-size-xl: 1.25rem; /* 20px */
+--font-size-2xl: 1.5rem; /* 24px */
+--font-size-3xl: 2rem; /* 32px */
+--font-size-4xl: 2.5rem; /* 40px */
+--font-size-5xl: 3rem; /* 48px */
+--font-size-6xl: 3.75rem; /* 60px - Clock size */
 ```
 
 ### Font Weights
 
 ```css
---font-weight-normal: 400;      /* Body text */
---font-weight-medium: 500;      /* Labels */
---font-weight-semibold: 600;    /* Headings */
---font-weight-bold: 700;        /* Strong headings */
+--font-weight-normal: 400; /* Body text */
+--font-weight-medium: 500; /* Labels */
+--font-weight-semibold: 600; /* Headings */
+--font-weight-bold: 700; /* Strong headings */
 ```
 
 **Usage:** Apply with `.font-bold`, `.font-semibold`, etc.
@@ -147,7 +151,8 @@ Green-dominant with earth tones:
 ### Font Family
 
 ```css
---font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+--font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  Oxygen, Ubuntu, Cantarell, sans-serif;
 ```
 
 To change globally, update this variable.
@@ -155,12 +160,12 @@ To change globally, update this variable.
 ## Spacing System
 
 ```css
---spacing-xs: 0.25rem;      /* 4px */
---spacing-sm: 0.5rem;       /* 8px */
---spacing-md: 1rem;         /* 16px */
---spacing-lg: 1.5rem;       /* 24px */
---spacing-xl: 2rem;         /* 32px */
---spacing-2xl: 3rem;        /* 48px */
+--spacing-xs: 0.25rem; /* 4px */
+--spacing-sm: 0.5rem; /* 8px */
+--spacing-md: 1rem; /* 16px */
+--spacing-lg: 1.5rem; /* 24px */
+--spacing-xl: 2rem; /* 32px */
+--spacing-2xl: 3rem; /* 48px */
 ```
 
 Used for: padding, margins, gaps between elements
@@ -183,11 +188,11 @@ Used for: padding, margins, gaps between elements
 ## Border Radius
 
 ```css
---radius-sm: 0.375rem;    /* 6px */
---radius-md: 0.5rem;      /* 8px */
---radius-lg: 0.75rem;     /* 12px */
---radius-xl: 1rem;        /* 16px - cards */
---radius-2xl: 1.5rem;     /* 24px */
+--radius-sm: 0.375rem; /* 6px */
+--radius-md: 0.5rem; /* 8px */
+--radius-lg: 0.75rem; /* 12px */
+--radius-xl: 1rem; /* 16px - cards */
+--radius-2xl: 1.5rem; /* 24px */
 ```
 
 ## Shadow System
@@ -215,7 +220,11 @@ Edit the `.card` class in `src/style.css`:
   overflow: hidden;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
   border: 1px solid var(--color-border);
   transition: all var(--transition-base);
 }

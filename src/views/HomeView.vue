@@ -1,51 +1,5 @@
 <template>
   <div class="h-screen w-screen overflow-hidden">
-    <!-- Animated gradient background -->
-    <div class="fixed inset-0 -z-10">
-      <div
-        class="absolute inset-0"
-        style="
-          background: linear-gradient(
-            to bottom right,
-            var(--color-bg-dark),
-            #0e1b3c,
-            var(--color-bg-dark)
-          );
-        "
-      ></div>
-      <div
-        class="absolute animate-float"
-        style="
-          top: 0;
-          left: 25%;
-          width: 24rem;
-          height: 24rem;
-          background: radial-gradient(
-            circle,
-            rgba(59, 130, 246, 0.1) 0%,
-            transparent 70%
-          );
-          border-radius: 50%;
-        "
-      ></div>
-      <div
-        class="absolute animate-float"
-        style="
-          bottom: 0;
-          right: 25%;
-          width: 24rem;
-          height: 24rem;
-          background: radial-gradient(
-            circle,
-            rgba(168, 85, 247, 0.1) 0%,
-            transparent 70%
-          );
-          border-radius: 50%;
-          animation-delay: 2s;
-        "
-      ></div>
-    </div>
-
     <!-- Header with search -->
     <header
       class="relative z-10"

@@ -3,6 +3,7 @@
 ## Installation & Running
 
 ### Prerequisites
+
 - Bun (https://bun.sh/) - Already installed? Run `bun --version`
 - Alternatively use Node 20+ with npm
 
@@ -41,9 +42,9 @@ Edit `src/style.css` in the `:root` selector:
 
 ```css
 :root {
-  --color-primary: #3b82f6;  /* Change this blue */
-  --color-secondary: #8b5cf6;  /* Change this purple */
-  --color-accent-green: #10b981;  /* Status colors */
+  --color-primary: #3b82f6; /* Change this blue */
+  --color-secondary: #8b5cf6; /* Change this purple */
+  --color-accent-green: #10b981; /* Status colors */
   /* ... etc ... */
 }
 ```
@@ -55,11 +56,11 @@ Edit `src/utils/dummyData.ts`:
 ```typescript
 export const getDummyServices = (): Service[] => [
   {
-    id: 'my-service',
-    name: 'My Service',
-    status: 'online',  // or 'offline'
-    icon: 'mdi:server',
-    description: 'What it does',
+    id: "my-service",
+    name: "My Service",
+    status: "online", // or 'offline'
+    icon: "mdi:server",
+    description: "What it does",
     uptime: 99.9,
   },
   // Add more...
@@ -73,11 +74,11 @@ In `src/utils/dummyData.ts`:
 ```typescript
 export const getDummyQuickLinks = (): QuickLink[] => [
   {
-    id: 'my-link',
-    name: 'My Site',
-    icon: 'mdi:web',
-    url: 'https://example.com',
-    color: 'from-blue-500 to-blue-600',  // gradient colors
+    id: "my-link",
+    name: "My Site",
+    icon: "mdi:web",
+    url: "https://example.com",
+    color: "from-blue-500 to-blue-600", // gradient colors
   },
   // Add more...
 ];
@@ -89,7 +90,7 @@ Replace the dummy data functions with API calls:
 
 ```typescript
 export const getDummyWeather = async (): Promise<WeatherData> => {
-  const response = await fetch('https://api.weather.com/...');
+  const response = await fetch("https://api.weather.com/...");
   return response.json();
 };
 ```
@@ -179,15 +180,18 @@ bun run build
 ## Troubleshooting
 
 ### Port 5173 already in use?
+
 ```bash
 bun run dev -- --port 3000
 ```
 
 ### CSS not updating?
+
 - Hard refresh (Ctrl+Shift+R or Cmd+Shift+R)
 - Check browser cache settings
 
 ### TypeScript errors?
+
 ```bash
 bun run type-check
 ```
