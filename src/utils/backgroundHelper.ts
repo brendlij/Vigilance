@@ -9,10 +9,25 @@ export interface BackgroundImage {
 }
 
 /**
- * Get a random unsplash image
+ * Get a random picsum image
+ * Using picsum.photos for random beautiful images with high resolution
+ */
+export const getRandomBackground = (): BackgroundImage => {
+  // picsum.photos generates a new random image each time with cache-busting
+  const timestamp = Date.now();
+  const url = `https://picsum.photos/3840/2160?t=${timestamp}`;
+
+  return {
+    url,
+    credit: "Random photo from picsum.photos",
+  };
+};
+
+/**
+ * Get a random unsplash image (backup option)
  * Using unsplash API for high-quality free images
  */
-export const getRandomBackground = async (): Promise<BackgroundImage> => {
+export const getRandomBackgroundUnsplash = async (): Promise<BackgroundImage> => {
   try {
     // Using Unsplash API - random high-quality images
     // Query: homelab, server room, technology, datacenter backgrounds
@@ -35,54 +50,18 @@ export const getRandomBackground = async (): Promise<BackgroundImage> => {
       credit: `Photo by ${data.user.name}`,
     };
   } catch (error) {
-    console.warn("Failed to fetch from Unsplash, using local gradient");
-    // Fallback to placeholder service or local gradient
-    return getLocalBackground();
+    console.warn("Failed to fetch from Unsplash, using picsum.photos");
+    return getRandomBackground();
   }
 };
 
 /**
  * Local background options (no API key needed)
- * Using placeholder images
+ * Using placeholder images - kept for reference
  */
 export const getLocalBackground = (): BackgroundImage => {
-  const backgrounds: BackgroundImage[] = [
-    {
-      url: "https://images.unsplash.com/photo-1639322537228-f710d846a88d?w=1920&h=1080&fit=crop",
-      credit: "Server Room",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop",
-      credit: "Datacenter",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1620712014215-c8067910aaa4?w=1920&h=1080&fit=crop",
-      credit: "Server Technology",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&h=1080&fit=crop",
-      credit: "Network Infrastructure",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1629904853893-c2c8981a1e5f?w=1920&h=1080&fit=crop",
-      credit: "Tech Background",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop",
-      credit: "Server Infrastructure",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&h=1080&fit=crop",
-      credit: "Technology Abstract",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1637599810694-4ee1afc82490?w=1920&h=1080&fit=crop",
-      credit: "Digital Network",
-    },
-  ];
-
-  const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-  return randomBg as BackgroundImage;
+  // Using picsum.photos for truly random images each time
+  return getRandomBackground();
 };
 
 /**
