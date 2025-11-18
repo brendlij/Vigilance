@@ -1,12 +1,26 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { getLocalBackground } from "./utils/backgroundHelper";
+import { getBackgroundFromBackend } from "./utils/backgroundHelper";
+import { fetchColors, applyColorsToCSS } from "./utils/colorHelper";
 import type { BackgroundImage } from "./utils/backgroundHelper";
 
 const background = ref<BackgroundImage>({ url: "" });
 
-onMounted(() => {
-  background.value = getLocalBackground();
+onMounted(async () => {
+  // Load colors from backend and apply to CSS
+  try {
+    const colors = await fetchColors();
+    applyColorsToCSS(colors);
+  } catch (error) {
+    console.error("Failed to load colors:", error);
+  }
+
+  // Load background image from backend
+  try {
+    background.value = await getBackgroundFromBackend();
+  } catch (error) {
+    console.error("Failed to load background:", error);
+  }
 });
 </script>
 

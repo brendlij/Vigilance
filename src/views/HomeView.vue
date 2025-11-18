@@ -13,10 +13,10 @@
       </div>
 
       <nav class="sidebar-nav">
-        <a href="#" class="nav-item active">
+        <router-link to="/" class="nav-item active">
           <Icon icon="mdi:view-dashboard" :width="20" :height="20" />
           <span>Dashboard</span>
-        </a>
+        </router-link>
         <a href="#" class="nav-item">
           <Icon icon="mdi:server-network" :width="20" :height="20" />
           <span>Services</span>
@@ -29,10 +29,10 @@
           <Icon icon="mdi:bell-outline" :width="20" :height="20" />
           <span>Alerts</span>
         </a>
-        <a href="#" class="nav-item">
+        <router-link to="/settings" class="nav-item">
           <Icon icon="mdi:cog-outline" :width="20" :height="20" />
           <span>Settings</span>
-        </a>
+        </router-link>
       </nav>
 
       <div class="sidebar-footer">
@@ -76,13 +76,22 @@
           <div class="hero-title">
             <h2>Dashboard</h2>
             <p class="hero-subtitle">
-              Monitoring {{ onlineServicesCount }} of {{ services.length }} services online
+              Monitoring {{ onlineServicesCount }} of
+              {{ services.length }} services online
             </p>
           </div>
           <div class="quick-stats">
             <div class="stat-card">
-              <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1)">
-                <Icon icon="mdi:check-circle" :width="24" :height="24" style="color: var(--color-accent-green)" />
+              <div
+                class="stat-icon"
+                style="background: rgba(16, 185, 129, 0.1)"
+              >
+                <Icon
+                  icon="mdi:check-circle"
+                  :width="24"
+                  :height="24"
+                  style="color: var(--color-accent-green)"
+                />
               </div>
               <div>
                 <div class="stat-value">{{ onlineServicesCount }}</div>
@@ -91,16 +100,31 @@
             </div>
             <div class="stat-card">
               <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1)">
-                <Icon icon="mdi:alert-circle" :width="24" :height="24" style="color: var(--color-accent-red)" />
+                <Icon
+                  icon="mdi:alert-circle"
+                  :width="24"
+                  :height="24"
+                  style="color: var(--color-accent-red)"
+                />
               </div>
               <div>
-                <div class="stat-value">{{ services.length - onlineServicesCount }}</div>
+                <div class="stat-value">
+                  {{ services.length - onlineServicesCount }}
+                </div>
                 <div class="stat-label">Offline</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1)">
-                <Icon icon="mdi:server" :width="24" :height="24" style="color: var(--color-primary)" />
+              <div
+                class="stat-icon"
+                style="background: rgba(59, 130, 246, 0.1)"
+              >
+                <Icon
+                  icon="mdi:server"
+                  :width="24"
+                  :height="24"
+                  style="color: var(--color-primary)"
+                />
               </div>
               <div>
                 <div class="stat-value">{{ services.length }}</div>
@@ -203,7 +227,11 @@ const onlineServicesCount = computed(() => dashboardStore.onlineServicesCount);
 .sidebar-title {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-light),
+    var(--color-secondary-light)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
