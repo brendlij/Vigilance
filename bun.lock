@@ -5,8 +5,10 @@
       "name": "vigilance",
       "dependencies": {
         "@iconify/vue": "^5.0.0",
+        "gridstack": "^12.3.3",
         "pinia": "^3.0.3",
         "vue": "^3.5.22",
+        "vue-grid-layout": "^2.4.0",
         "vue-router": "^4.6.3",
       },
       "devDependencies": {
@@ -139,6 +141,48 @@
 
     "@iconify/vue": ["@iconify/vue@5.0.0", "", { "dependencies": { "@iconify/types": "^2.0.0" }, "peerDependencies": { "vue": ">=3" } }, "sha512-C+KuEWIF5nSBrobFJhT//JS87OZ++QDORB6f2q2Wm6fl2mueSTpFBeBsveK0KW9hWiZ4mNiPjsh6Zs4jjdROSg=="],
 
+    "@interactjs/actions": ["@interactjs/actions@1.10.2", "", { "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-BHJcW84WCMf/LsKmha/1Yog7aH3+QBXbLvowvZvwYvgjdUIb3xCa1a7FUYXuWAeKNMyKPVjFun+WPce75B+1tA=="],
+
+    "@interactjs/arrange": ["@interactjs/arrange@1.10.2", "", {}, "sha512-pPLA9o4RWMFN0VfalklOFSRLL4WqqXcD9no4XEuqV00goZPCxLBbMTztaWwnutlRy7evtOhUjUH+pZVsS+dZ4Q=="],
+
+    "@interactjs/auto-scroll": ["@interactjs/auto-scroll@1.10.2", "", { "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/utils": "1.10.2" } }, "sha512-yYqzOawwvWd1NNnlqZdzrXoOMFafQ2/ws85erpJqdaNMQE221z2uP+QYhFRLQRgYUlTbHFfmjDpzhuJgq4uA8Q=="],
+
+    "@interactjs/auto-start": ["@interactjs/auto-start@1.10.2", "", { "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-nZudj8VzJzz+uEyDHqXwtKpvUYr+Oj1+xBrJEu21CywroHQWM2J4fCIiCgeCo3d5/p/TrzFk5b+YfAWePKiLxA=="],
+
+    "@interactjs/clone": ["@interactjs/clone@1.10.2", "", {}, "sha512-XzA8BRHSCwvysOegZ1kopg+IJF3erh4qzY6DRoZsIJovKAXawoa176E58IAzDbgYPJ2yoaSGT+XyzT2C0wa3pQ=="],
+
+    "@interactjs/core": ["@interactjs/core@1.10.2", "", { "peerDependencies": { "@interactjs/utils": "1.10.2" } }, "sha512-SA5KRGo+gFJOhBj1Z2dLHhAf0/2nyHNd4SQ460aIQ3jj/QhqbJW6kGzmh7hBa2FzVGgxLhcQu7NZaP4rnDfUNw=="],
+
+    "@interactjs/dev-tools": ["@interactjs/dev-tools@1.10.2", "", { "dependencies": { "@interactjs/utils": "1.10.2" }, "optionalDependencies": { "@interactjs/interact": "1.10.2" } }, "sha512-aAd9NgTAGA3yVdFCYcAAYrM4TYQFuVqEvsF+xj+g5SlGyrJ7+GTjPZ2rScOyAsABY4Tz64L2pXvWmXMG87dncA=="],
+
+    "@interactjs/feedback": ["@interactjs/feedback@1.10.2", "", {}, "sha512-XlcoICGrFeUwwRtDgOpstOOvlU42WZoEg7gJHK3LwF7j0IctPd1+3blXofFlBeVvodle8MvUMepm5CRXz741fA=="],
+
+    "@interactjs/inertia": ["@interactjs/inertia@1.10.2", "", { "dependencies": { "@interactjs/offset": "1.10.2" }, "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/modifiers": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-ZmN1joN6J36Q6SOp3V0iZOisXZOBMSAUj0STo8wbwCKy7K8IrC9vjUBbO2JM52cT6o7hg5ebHsp5c8FrebSHlg=="],
+
+    "@interactjs/interact": ["@interactjs/interact@1.10.2", "", { "dependencies": { "@interactjs/core": "1.10.2", "@interactjs/types": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-Ms5uVCY9IobVYpQyBnBdkP6Bk6iDY7TkC7GupsdUPUxzAvYSQCTEAGr/1PwxSrSS6dN/8O8TuyUWPbCaylr/JA=="],
+
+    "@interactjs/interactjs": ["@interactjs/interactjs@1.10.2", "", { "dependencies": { "@interactjs/actions": "1.10.2", "@interactjs/arrange": "1.10.2", "@interactjs/auto-scroll": "1.10.2", "@interactjs/auto-start": "1.10.2", "@interactjs/clone": "1.10.2", "@interactjs/core": "1.10.2", "@interactjs/dev-tools": "1.10.2", "@interactjs/feedback": "1.10.2", "@interactjs/inertia": "1.10.2", "@interactjs/interact": "1.10.2", "@interactjs/modifiers": "1.10.2", "@interactjs/multi-target": "1.10.2", "@interactjs/offset": "1.10.2", "@interactjs/pointer-events": "1.10.2", "@interactjs/react": "1.10.2", "@interactjs/reflow": "1.10.2", "@interactjs/utils": "1.10.2", "@interactjs/vue": "1.10.2" } }, "sha512-OwLl70af6lfZOOg/bvWKSNm1DS1nDI72QnzDYljSKfc2D8stqLIGDO1wPY2rhZudUG5q3t50EhmMUQF76yll/g=="],
+
+    "@interactjs/modifiers": ["@interactjs/modifiers@1.10.2", "", { "dependencies": { "@interactjs/snappers": "1.10.2" }, "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-3wYEucvZF2NTIslnVIKw5MWhkn9LM42cGCQaC19o3LZeWnbps7NnHJCyQp6zylJrCbwt7f+CSt4Oj2/s0f6XEA=="],
+
+    "@interactjs/multi-target": ["@interactjs/multi-target@1.10.2", "", {}, "sha512-O2GiIqgZBzjAVTOpL8doTnAcM9AtM3+H/Bb+An12wWKtNutVK7JbqUAO2nYueOk55/PP3yDLY9Qdr15RJns3lQ=="],
+
+    "@interactjs/offset": ["@interactjs/offset@1.10.2", "", { "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-xLgQqinFUY7ZqSX9d9on7XRcxvQdHNEAktj2QFwxMsEwrA6zbKROpPVwt8WQ1yBAeJSFjgYGcmCMPW5K41dT0w=="],
+
+    "@interactjs/pointer-events": ["@interactjs/pointer-events@1.10.2", "", { "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-O8s3N399hkGIzWGlcJVy0LJyDn5YWDh6XKjyowh/QivtlZSWPY8eglmlN2uZX0lmiqUYghbKI4CpQYP/cE0ZDA=="],
+
+    "@interactjs/react": ["@interactjs/react@1.10.2", "", {}, "sha512-JXzPdANft+W2vq3SCSzprCwom5UuC8TaiAAhVdt8R+/P6xHbOeAX93XLS5YmDwT8e0Zh9J9jYvz55tkTdwjFZQ=="],
+
+    "@interactjs/reflow": ["@interactjs/reflow@1.10.2", "", { "optionalDependencies": { "@interactjs/interact": "1.10.2" }, "peerDependencies": { "@interactjs/core": "1.10.2", "@interactjs/utils": "1.10.2" } }, "sha512-pc6o6RRhSCYQC4auZexRb7z5FQkdSVev5HzlRfUAjfw4C076qgbcs63ESRKy4YXdSBtUTvARQZxpuWUNGquzJw=="],
+
+    "@interactjs/snappers": ["@interactjs/snappers@1.10.2", "", { "peerDependencies": { "@interactjs/utils": "1.10.2" } }, "sha512-wQ41Vn5GRn6VavjIEUtTkd9d5QgdKgC4+CPW0fjKkiQclLBmaic7VibNETO8twN0Jx5e73EoPj9K2nAVHIA0hA=="],
+
+    "@interactjs/types": ["@interactjs/types@1.10.2", "", {}, "sha512-l0T1bU8OHRv716ztQOYwP+K7b/lA76C0T3r/cdabbUv6CKeAFdFRRFlmNxYOM36SxMGWAiq5VWrN3SeXlB7Fow=="],
+
+    "@interactjs/utils": ["@interactjs/utils@1.10.2", "", {}, "sha512-sOr+pu7XGAN4qv+ikajMo3RJygbkbMLegmx0Tv5Qf6e80sF42FjkmHeMGuV7fL98nwat0VmDiWerOFBnKctXow=="],
+
+    "@interactjs/vue": ["@interactjs/vue@1.10.2", "", {}, "sha512-msLdc42DFsCPQZt6YBGZrw8Ro23kQcNnj+iLz2OUQcOrp/lma7WjorUuAwwfyFna2DevLtiYlMLbT0dpO/cVhg=="],
+
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 
     "@jridgewell/remapping": ["@jridgewell/remapping@2.3.5", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ=="],
@@ -255,6 +299,8 @@
 
     "baseline-browser-mapping": ["baseline-browser-mapping@2.8.30", "", { "bin": { "baseline-browser-mapping": "dist/cli.js" } }, "sha512-aTUKW4ptQhS64+v2d6IkPzymEzzhw+G0bA1g3uBRV3+ntkH+svttKseW5IOR4Ed6NUVKqnY7qT3dKvzQ7io4AA=="],
 
+    "batch-processor": ["batch-processor@1.0.0", "", {}, "sha512-xoLQD8gmmR32MeuBHgH0Tzd5PuSZx71ZsbhVxOCRbgktZEPe4SQy7s9Z50uPp0F/f7iw2XmkHN2xkgbMfckMDA=="],
+
     "birpc": ["birpc@2.8.0", "", {}, "sha512-Bz2a4qD/5GRhiHSwj30c/8kC8QGj12nNDwz3D4ErQ4Xhy35dsSDvF+RA/tWpjyU0pdGtSDiEk6B5fBGE1qNVhw=="],
 
     "browserslist": ["browserslist@4.28.0", "", { "dependencies": { "baseline-browser-mapping": "^2.8.25", "caniuse-lite": "^1.0.30001754", "electron-to-chromium": "^1.5.249", "node-releases": "^2.0.27", "update-browserslist-db": "^1.1.4" }, "bin": { "browserslist": "cli.js" } }, "sha512-tbydkR/CxfMwelN0vwdP/pLkDwyAASZ+VfWm4EOwlB6SWhx1sYnWLqo8N5j0rAzPfzfRaxt0mM/4wPU/Su84RQ=="],
@@ -281,6 +327,8 @@
 
     "electron-to-chromium": ["electron-to-chromium@1.5.259", "", {}, "sha512-I+oLXgpEJzD6Cwuwt1gYjxsDmu/S/Kd41mmLA3O+/uH2pFRO/DvOjUyGozL8j3KeLV6WyZ7ssPwELMsXCcsJAQ=="],
 
+    "element-resize-detector": ["element-resize-detector@1.2.4", "", { "dependencies": { "batch-processor": "1.0.0" } }, "sha512-Fl5Ftk6WwXE0wqCgNoseKWndjzZlDCwuPTcoVZfCP9R3EHQF8qUtr3YUPNETegRBOKqQKPW3n4kiIWngGi8tKg=="],
+
     "entities": ["entities@4.5.0", "", {}, "sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw=="],
 
     "error-stack-parser-es": ["error-stack-parser-es@1.0.5", "", {}, "sha512-5qucVt2XcuGMcEGgWI7i+yZpmpByQ8J1lHhcL7PwqCwu9FPP3VUXzT4ltHe5i2z9dePwEHcDVOAfSnHsOlCXRA=="],
@@ -296,6 +344,8 @@
     "fsevents": ["fsevents@2.3.3", "", { "os": "darwin" }, "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="],
 
     "gensync": ["gensync@1.0.0-beta.2", "", {}, "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg=="],
+
+    "gridstack": ["gridstack@12.3.3", "", {}, "sha512-Bboi4gj7HXGnx1VFXQNde4Nwi5srdUSuCCnOSszKhFjBs8EtMEWhsKX02BjIKkErq/FjQUkNUbXUYeQaVMQ0jQ=="],
 
     "hookable": ["hookable@5.5.3", "", {}, "sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ=="],
 
@@ -414,6 +464,8 @@
     "vscode-uri": ["vscode-uri@3.1.0", "", {}, "sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ=="],
 
     "vue": ["vue@3.5.24", "", { "dependencies": { "@vue/compiler-dom": "3.5.24", "@vue/compiler-sfc": "3.5.24", "@vue/runtime-dom": "3.5.24", "@vue/server-renderer": "3.5.24", "@vue/shared": "3.5.24" }, "peerDependencies": { "typescript": "*" }, "optionalPeers": ["typescript"] }, "sha512-uTHDOpVQTMjcGgrqFPSb8iO2m1DUvo+WbGqoXQz8Y1CeBYQ0FXf2z1gLRaBtHjlRz7zZUBHxjVB5VTLzYkvftg=="],
+
+    "vue-grid-layout": ["vue-grid-layout@2.4.0", "", { "dependencies": { "@interactjs/actions": "1.10.2", "@interactjs/auto-scroll": "1.10.2", "@interactjs/auto-start": "1.10.2", "@interactjs/dev-tools": "1.10.2", "@interactjs/interactjs": "1.10.2", "@interactjs/modifiers": "1.10.2", "element-resize-detector": "^1.2.1" } }, "sha512-MRQVt1BdWDaPN4gKGEKOVVwiTyucqJhrGEyjiY9Muor+dzFFq4Hm0geSpYJpLvC1GLlTL8KWUwy0suKrHm+mqg=="],
 
     "vue-router": ["vue-router@4.6.3", "", { "dependencies": { "@vue/devtools-api": "^6.6.4" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-ARBedLm9YlbvQomnmq91Os7ck6efydTSpRP3nuOKCvgJOHNrhRoJDSKtee8kcL1Vf7nz6U+PMBL+hTvR3bTVQg=="],
 
