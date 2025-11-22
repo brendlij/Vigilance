@@ -2,7 +2,11 @@
   <div
     class="grid-card"
     :style="cardStyle"
-    :class="{ preview: isDragging, resizing: isResizing }"
+    :class="{
+      preview: isDragging,
+      resizing: isResizing,
+      'edit-mode': editMode,
+    }"
     @mousedown="startDrag"
   >
     <slot>
@@ -25,6 +29,7 @@ interface Props {
   maxColSpan?: number;
   minRowSpan?: number;
   maxRowSpan?: number;
+  editMode?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -58,8 +63,12 @@ const cardStyle = computed(() => ({
 }));
 
 const startDrag = (event: MouseEvent) => {
-  // Don't drag if clicking on resize handle
+  // Don't drag if clicking on resize handle or edit mode is off
   if ((event.target as HTMLElement).classList.contains("resize-handle")) {
+    return;
+  }
+
+  if (!props.editMode) {
     return;
   }
 
@@ -123,6 +132,11 @@ const startDrag = (event: MouseEvent) => {
 };
 
 const startResize = (event: MouseEvent) => {
+  // Don't resize if edit mode is off
+  if (!props.editMode) {
+    return;
+  }
+
   event.preventDefault();
   const startX = event.clientX;
   const startY = event.clientY;
@@ -216,10 +230,17 @@ const startResize = (event: MouseEvent) => {
   cursor: nwse-resize;
   opacity: 0;
   transition: opacity 0.2s ease;
+  display: none;
 }
 
-.grid-card:hover .resize-handle {
+.grid-card.edit-mode:hover .resize-handle {
+  display: block;
   opacity: 0.6;
+}
+
+.grid-card.resizing .resize-handle {
+  display: block;
+  opacity: 1;
 }
 
 .resize-handle:active {

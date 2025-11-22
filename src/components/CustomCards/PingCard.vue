@@ -1,5 +1,5 @@
 <template>
-  <div class="ping-card">
+  <div class="ping-card" :class="{ 'edit-mode': editMode }">
     <div class="ping-header">
       <h3>Ping Monitor</h3>
       <div class="status-indicator" :class="statusClass"></div>
@@ -8,7 +8,12 @@
     <div class="ping-content">
       <div class="ping-target">
         <label>Target:</label>
-        <input v-model="target" type="text" placeholder="example.com" />
+        <input
+          v-model="target"
+          type="text"
+          placeholder="example.com"
+          :disabled="editMode"
+        />
       </div>
 
       <div class="ping-display">
@@ -31,7 +36,11 @@
         </div>
       </div>
 
-      <button @click="togglePing" :class="{ active: isPinging }">
+      <button
+        @click="togglePing"
+        :class="{ active: isPinging }"
+        :disabled="editMode"
+      >
         {{ isPinging ? "Stop" : "Start" }} Ping
       </button>
     </div>
@@ -40,6 +49,14 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+
+interface Props {
+  editMode?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  editMode: false,
+});
 
 const target = ref("google.com");
 const isPinging = ref(false);
@@ -270,5 +287,20 @@ button.active {
 
 button.active:hover {
   background: #dc2626;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ping-card.edit-mode {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

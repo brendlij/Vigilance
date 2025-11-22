@@ -1,9 +1,21 @@
 <template>
   <div class="home-view">
-    <h1>Welcome to Vigilance</h1>
-    <p>Your smart home monitoring system is ready.</p>
+    <div class="header">
+      <div>
+        <h1>Welcome to Vigilance</h1>
+        <p>Your smart home monitoring system is ready.</p>
+      </div>
+      <button
+        class="edit-button"
+        :class="{ active: editMode }"
+        @click="editMode = !editMode"
+      >
+        <span class="edit-icon">✏️</span>
+        {{ editMode ? "Editing" : "View" }}
+      </button>
+    </div>
 
-    <div class="controls">
+    <div class="controls" :class="{ disabled: editMode }">
       <label for="gap-control">Grid Gap:</label>
       <input
         id="gap-control"
@@ -12,11 +24,12 @@
         min="0"
         max="3"
         step="0.1"
+        :disabled="editMode"
       />
       <span>{{ gridGap.toFixed(1) }}rem</span>
     </div>
 
-    <div class="controls">
+    <div class="controls" :class="{ disabled: editMode }">
       <label for="row-height-control">Row Height:</label>
       <input
         id="row-height-control"
@@ -25,6 +38,7 @@
         min="50"
         max="300"
         step="10"
+        :disabled="editMode"
       />
       <span>{{ rowHeight }}px</span>
     </div>
@@ -45,12 +59,13 @@
         :max-col-span="card.maxColSpan"
         :min-row-span="card.minRowSpan"
         :max-row-span="card.maxRowSpan"
+        :edit-mode="editMode"
         @resize="(newSize) => handleResize(index, newSize)"
         @preview-move="(newPos) => handlePreviewMove(index, newPos)"
         @cancel-preview="() => handleCancelPreview(index)"
         @move="(newPos) => handleMove(index, newPos)"
       >
-        <PingCard v-if="card.isCustom" />
+        <PingCard v-if="card.isCustom" :edit-mode="editMode" />
         <div v-else class="card-content">
           <div class="card-label">{{ card.label }}</div>
           <div class="card-info">
@@ -84,6 +99,7 @@ interface Card {
 
 const gridGap = ref(1);
 const rowHeight = ref(100);
+const editMode = ref(false);
 const previewCardStates = ref<Map<number, { col: number; row: number }>>(
   new Map()
 );
@@ -462,6 +478,18 @@ const handleMove = (
   padding: 2rem;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 2rem;
+}
+
+.header > div {
+  flex: 1;
+}
+
 h1 {
   margin: 0 0 1rem 0;
   font-size: 2.5rem;
@@ -471,7 +499,39 @@ h1 {
 p {
   color: #475569;
   font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
+}
+
+.edit-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid #0f172a;
+  border-radius: 0.5rem;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.edit-button:hover {
+  background-color: #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button.active {
+  background-color: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+.edit-icon {
+  font-size: 1.2rem;
 }
 
 .controls {
@@ -482,6 +542,12 @@ p {
   padding: 1rem;
   background-color: #f1f5f9;
   border-radius: 0.5rem;
+  transition: opacity 0.2s ease;
+}
+
+.controls.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .controls label {
