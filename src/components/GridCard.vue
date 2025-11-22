@@ -2,7 +2,7 @@
   <div
     class="grid-card"
     :style="cardStyle"
-    :class="{ preview: isDragging }"
+    :class="{ preview: isDragging, resizing: isResizing }"
     @mousedown="startDrag"
   >
     <slot>
@@ -49,6 +49,7 @@ const emit = defineEmits<{
 const localColSpan = ref(props.colSpan);
 const localRowSpan = ref(props.rowSpan);
 const isDragging = ref(false);
+const isResizing = ref(false);
 
 const cardStyle = computed(() => ({
   gridColumn: `${props.col} / span ${localColSpan.value}`,
@@ -128,6 +129,8 @@ const startResize = (event: MouseEvent) => {
   const startColSpan = localColSpan.value;
   const startRowSpan = localRowSpan.value;
 
+  isResizing.value = true;
+
   const handleMouseMove = (moveEvent: MouseEvent) => {
     const deltaX = moveEvent.clientX - startX;
     const deltaY = moveEvent.clientY - startY;
@@ -150,6 +153,7 @@ const startResize = (event: MouseEvent) => {
   const handleMouseUp = () => {
     window.removeEventListener("mousemove", handleMouseMove);
     window.removeEventListener("mouseup", handleMouseUp);
+    isResizing.value = false;
     emit("resize", {
       colSpan: localColSpan.value,
       rowSpan: localRowSpan.value,
@@ -183,10 +187,17 @@ const startResize = (event: MouseEvent) => {
 }
 
 .grid-card.preview {
-  opacity: 0.7;
+  opacity: 1;
   z-index: 1000;
   box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
   border-color: #3b82f6;
+}
+
+.grid-card.resizing {
+  opacity: 1;
+  z-index: 1000;
+  box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
+  border-color: #22c55e;
 }
 
 .grid-card p {
