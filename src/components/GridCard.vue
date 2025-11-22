@@ -1,5 +1,10 @@
 <template>
-  <div class="grid-card" :style="cardStyle" @mousedown="startDrag">
+  <div
+    class="grid-card"
+    :style="cardStyle"
+    :class="{ preview: isDragging }"
+    @mousedown="startDrag"
+  >
     <slot>
       <p>Card Content</p>
     </slot>
@@ -37,10 +42,13 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   resize: [{ colSpan: number; rowSpan: number }];
   move: [{ col: number; row: number }];
+  previewMove: [{ col: number; row: number }];
+  cancelPreview: [];
 }>();
 
 const localColSpan = ref(props.colSpan);
 const localRowSpan = ref(props.rowSpan);
+const isDragging = ref(false);
 
 const cardStyle = computed(() => ({
   gridColumn: `${props.col} / span ${localColSpan.value}`,
@@ -59,6 +67,13 @@ const startDrag = (event: MouseEvent) => {
   const startY = event.clientY;
   const startCol = props.col;
   const startRow = props.row;
+  let lastPreviewCol = startCol;
+  let lastPreviewRow = startRow;
+
+  console.log(
+    `[GRIDCARD] Drag started at (${startX}, ${startY}) from position (${startCol}, ${startRow})`
+  );
+  isDragging.value = true;
 
   const handleMouseMove = (moveEvent: MouseEvent) => {
     const deltaX = moveEvent.clientX - startX;
@@ -71,13 +86,35 @@ const startDrag = (event: MouseEvent) => {
     const newCol = Math.max(1, startCol + colChange);
     const newRow = Math.max(1, startRow + rowChange);
 
-    // Emit the new position
-    emit("move", { col: newCol, row: newRow });
+    // Track the last preview position
+    lastPreviewCol = newCol;
+    lastPreviewRow = newRow;
+
+    // Emit preview position (card moves in UI but not committed yet)
+    emit("previewMove", { col: newCol, row: newRow });
   };
 
   const handleMouseUp = () => {
     window.removeEventListener("mousemove", handleMouseMove);
     window.removeEventListener("mouseup", handleMouseUp);
+
+    isDragging.value = false;
+
+    console.log(
+      `[GRIDCARD] Mouse up - lastPreview: (${lastPreviewCol}, ${lastPreviewRow}), Start: (${startCol}, ${startRow})`
+    );
+
+    // Check if preview position changed from start
+    if (lastPreviewCol !== startCol || lastPreviewRow !== startRow) {
+      console.log(
+        `[GRIDCARD] Emitting MOVE event to (${lastPreviewCol}, ${lastPreviewRow})`
+      );
+      emit("move", { col: lastPreviewCol, row: lastPreviewRow });
+    } else {
+      console.log(`[GRIDCARD] Emitting CANCEL event (no movement)`);
+      // If no movement, cancel the preview and revert
+      emit("cancelPreview");
+    }
   };
 
   window.addEventListener("mousemove", handleMouseMove);
@@ -134,14 +171,22 @@ const startResize = (event: MouseEvent) => {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, opacity 0.1s ease, z-index 0s ease;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
 .grid-card:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.grid-card.preview {
+  opacity: 0.7;
+  z-index: 1000;
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+  border-color: #3b82f6;
 }
 
 .grid-card p {

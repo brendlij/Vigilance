@@ -46,9 +46,12 @@
         :min-row-span="card.minRowSpan"
         :max-row-span="card.maxRowSpan"
         @resize="(newSize) => handleResize(index, newSize)"
+        @preview-move="(newPos) => handlePreviewMove(index, newPos)"
+        @cancel-preview="() => handleCancelPreview(index)"
         @move="(newPos) => handleMove(index, newPos)"
       >
-        <div class="card-content">
+        <PingCard v-if="card.isCustom" />
+        <div v-else class="card-content">
           <div class="card-label">{{ card.label }}</div>
           <div class="card-info">
             <div>Pos: ({{ card.col }}, {{ card.row }})</div>
@@ -63,6 +66,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import GridCard from "@/components/GridCard.vue";
+import PingCard from "@/components/CustomCards/PingCard.vue";
 
 interface Card {
   col: number;
@@ -75,10 +79,15 @@ interface Card {
   maxColSpan?: number;
   minRowSpan?: number;
   maxRowSpan?: number;
+  isCustom?: boolean;
 }
 
 const gridGap = ref(1);
 const rowHeight = ref(100);
+const previewCardStates = ref<Map<number, { col: number; row: number }>>(
+  new Map()
+);
+const isDragging = ref(false);
 const cards = ref<Card[]>([
   {
     col: 1,
@@ -152,6 +161,19 @@ const cards = ref<Card[]>([
     minRowSpan: 1,
     maxRowSpan: 2,
   },
+  {
+    col: 7,
+    row: 1,
+    colSpan: 4,
+    rowSpan: 4,
+    label: "Ping Monitor",
+    color: "#fef3c7",
+    minColSpan: 2,
+    maxColSpan: 4,
+    minRowSpan: 2,
+    maxRowSpan: 4,
+    isCustom: true,
+  },
 ]);
 
 const doRectanglesOverlap = (
@@ -217,6 +239,66 @@ const findNextAvailablePosition = (
 
   // Fallback: place at the end
   return { col: 1, row: maxSearchRow };
+};
+
+const handlePreviewMove = (
+  cardIndex: number,
+  newPos: { col: number; row: number }
+) => {
+  const card = cards.value[cardIndex];
+  if (!card) return;
+
+  console.log(
+    `[PREVIEW] Card ${cardIndex} preview move to (${newPos.col}, ${newPos.row})`
+  );
+  isDragging.value = true;
+
+  // Store original state ONLY on first preview move for cancel support
+  if (!previewCardStates.value.has(cardIndex)) {
+    console.log(
+      `[PREVIEW] Storing original positions for card ${cardIndex}: (${card.col}, ${card.row})`
+    );
+    previewCardStates.value.set(cardIndex, { col: card.col, row: card.row });
+    cards.value.forEach((c, idx) => {
+      if (idx !== cardIndex && !previewCardStates.value.has(idx)) {
+        previewCardStates.value.set(idx, { col: c.col, row: c.row });
+      }
+    });
+  }
+
+  // Just update position for preview
+  card.col = newPos.col;
+  card.row = newPos.row;
+  console.log(
+    `[PREVIEW] Updated card ${cardIndex} position to (${card.col}, ${card.row})`
+  );
+
+  // Keep within boundaries
+  if (card.col + card.colSpan - 1 > 12) {
+    card.col = Math.max(1, 12 - card.colSpan + 1);
+  }
+  if (card.col < 1) {
+    card.col = 1;
+  }
+
+  console.log(`[PREVIEW] Preview complete - only dragged card moved`);
+};
+
+const handleCancelPreview = (cardIndex: number) => {
+  console.log(`[CANCEL] Cancelling preview for card ${cardIndex}`);
+  // Restore original positions for all cards involved in the preview
+  previewCardStates.value.forEach((pos, idx) => {
+    const card = cards.value[idx];
+    if (card) {
+      console.log(`[CANCEL] Restoring card ${idx} to (${pos.col}, ${pos.row})`);
+      card.col = pos.col;
+      card.row = pos.row;
+    }
+  });
+  // Clear preview state
+  previewCardStates.value.clear();
+  isDragging.value = false;
+  console.log(`[CANCEL] Preview cancelled and cleared`);
 };
 
 const handleResize = (
@@ -285,19 +367,22 @@ const handleMove = (
   const movingCard = cards.value[cardIndex];
   if (!movingCard) return;
 
-  // Update the card position
-  movingCard.col = newPos.col;
-  movingCard.row = newPos.row;
+  console.log(
+    `[MOVE] Card ${cardIndex} move finalized to (${newPos.col}, ${newPos.row})`
+  );
+  console.log(
+    `[MOVE] Current card position: (${movingCard.col}, ${movingCard.row})`
+  );
+  console.log(`[MOVE] isDragging = ${isDragging.value}`);
+  console.log(
+    `[MOVE] Preview states before clear:`,
+    Array.from(previewCardStates.value.entries())
+  );
 
-  // Check grid boundaries - keep card within grid
-  if (movingCard.col + movingCard.colSpan - 1 > 12) {
-    movingCard.col = Math.max(1, 12 - movingCard.colSpan + 1);
-  }
-  if (movingCard.col < 1) {
-    movingCard.col = 1;
-  }
+  // Mark drag as complete
+  isDragging.value = false;
 
-  // Keep resolving collisions until there are none
+  // Apply collision resolution now that card is dropped
   let hasCollisions = true;
   let iterations = 0;
   const maxIterations = 10;
@@ -308,7 +393,6 @@ const handleMove = (
 
     cards.value.forEach((card, index) => {
       if (index !== cardIndex) {
-        // Check if this card collides with any other card
         let collides = false;
         cards.value.forEach((otherCard, otherIndex) => {
           if (index !== otherIndex) {
@@ -330,7 +414,7 @@ const handleMove = (
         });
 
         if (collides) {
-          // Find next available position for this card
+          // Find next available position that doesn't collide with anyone
           const nextPos = findNextAvailablePosition(
             card.colSpan,
             card.rowSpan,
@@ -338,21 +422,31 @@ const handleMove = (
           );
           card.col = nextPos.col;
           card.row = nextPos.row;
+          console.log(
+            `[MOVE] Card ${index} colliding, moving to (${card.col}, ${card.row})`
+          );
           hasCollisions = true;
         }
       }
     });
   }
 
-  // Scroll card into view after all collisions are resolved
+  // Clear the preview state to finalize the move
+  previewCardStates.value.clear();
+
+  console.log(
+    `[MOVE] Collision resolution complete after ${iterations} iterations, final card position: (${movingCard.col}, ${movingCard.row})`
+  );
+
+  // Scroll card into view
   setTimeout(() => {
     const gridContainer = document.querySelector(
       ".grid-container"
     ) as HTMLElement;
     if (gridContainer) {
-      const cardIndex = cards.value.indexOf(movingCard);
       const cards_dom = gridContainer.querySelectorAll(".grid-card");
       if (cards_dom[cardIndex]) {
+        console.log(`[MOVE] Scrolling card ${cardIndex} into view`);
         cards_dom[cardIndex].scrollIntoView({
           behavior: "smooth",
           block: "nearest",
