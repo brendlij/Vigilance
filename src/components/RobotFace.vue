@@ -169,7 +169,7 @@ onUnmounted(() => {
   width: 100px;
   height: 80px;
   background-color: #d0f0eb;
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0 2px 0 rgba(123, 187, 176, 0.2);
   display: flex;
   justify-content: center;

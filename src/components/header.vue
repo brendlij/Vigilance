@@ -4,8 +4,10 @@ import { Icon } from "@iconify/vue";
 import { ref, onMounted } from "vue";
 
 import RobotFace from "./RobotFace.vue";
+import { useEditMode } from "@/composables/useEditMode";
 
 const router = useRouter();
+const { editMode, toggleEditMode } = useEditMode();
 const isDropdownOpen = ref(false);
 const isNotificationsOpen = ref(false);
 const isWeatherOpen = ref(false);
@@ -118,6 +120,11 @@ const loadSettings = () => {
   const savedApiKey = localStorage.getItem("weatherApiKey");
   if (savedCity) settingsCity.value = savedCity;
   if (savedApiKey) settingsApiKey.value = savedApiKey;
+};
+
+const handleEditModeToggle = () => {
+  toggleEditMode();
+  isDropdownOpen.value = false;
 };
 
 const toggleDropdown = () => {
@@ -317,6 +324,10 @@ const handleOutsideClick = (event: MouseEvent) => {
             <a href="#" class="nav-link">Home</a>
             <a href="#" class="nav-link">About</a>
             <a href="#" class="nav-link">Contact</a>
+            <hr class="nav-divider" />
+            <button class="nav-link edit-toggle" @click="handleEditModeToggle">
+              {{ editMode ? "Finish" : "Edit" }}
+            </button>
           </nav>
         </div>
       </div>
@@ -397,7 +408,6 @@ const handleOutsideClick = (event: MouseEvent) => {
   font-weight: 500;
   cursor: pointer;
   color: #333333;
-  margin-left: 1rem;
 }
 
 .time {
@@ -782,11 +792,32 @@ const handleOutsideClick = (event: MouseEvent) => {
   display: block;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
 }
 
 .nav-link:hover {
   background-color: #f9f9f9;
   color: #333;
+}
+
+.nav-link.edit-toggle {
+  color: #666;
+  font-weight: 500;
+}
+
+.nav-link.edit-toggle:hover {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.nav-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0.25rem 0;
 }
 
 .weather-header {

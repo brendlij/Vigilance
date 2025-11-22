@@ -30,43 +30,6 @@ export interface CardTemplate {
 // Verfügbare Card-Typen
 export const CARD_TEMPLATES: CardTemplate[] = [
   {
-    type: "ping",
-    label: "Ping Monitor",
-    description: "Monitor a host's ping response",
-    defaultConfig: {
-      col: 1,
-      row: 1,
-      colSpan: 4,
-      rowSpan: 4,
-      minColSpan: 2,
-      maxColSpan: 6,
-      minRowSpan: 2,
-      maxRowSpan: 6,
-    },
-    defaultData: {
-      url: "8.8.8.8",
-      interval: 5,
-    },
-  },
-  {
-    type: "clock",
-    label: "Clock",
-    description: "Display current time",
-    defaultConfig: {
-      col: 1,
-      row: 1,
-      colSpan: 2,
-      rowSpan: 1,
-      minColSpan: 2,
-      maxColSpan: 4,
-      minRowSpan: 1,
-      maxRowSpan: 2,
-    },
-    defaultData: {
-      format: "HH:mm:ss",
-    },
-  },
-  {
     type: "weather",
     label: "Weather",
     description: "Show weather information",

@@ -3,14 +3,14 @@
     class="grid-card"
     :style="cardStyle"
     :class="{
-      preview: isDragging,
+      dragging: isDragging,
       resizing: isResizing,
       'edit-mode': editMode,
     }"
     @mousedown="startDrag"
   >
     <button
-      v-if="deletable"
+      v-if="deletable && editMode"
       class="delete-button"
       @click.stop="emit('delete')"
       title="Delete card"
@@ -22,7 +22,11 @@
       <p>Card Content</p>
     </slot>
 
-    <div class="resize-handle" @mousedown.stop="startResize"></div>
+    <div
+      v-if="editMode"
+      class="resize-handle"
+      @mousedown.stop="startResize"
+    ></div>
   </div>
 </template>
 
@@ -67,12 +71,14 @@ const emit = defineEmits<{
 
 const localColSpan = ref(props.colSpan);
 const localRowSpan = ref(props.rowSpan);
+const localCol = ref(props.col);
+const localRow = ref(props.row);
 const isDragging = ref(false);
 const isResizing = ref(false);
 
 const cardStyle = computed(() => ({
-  gridColumn: `${props.col} / span ${localColSpan.value}`,
-  gridRow: `${props.row} / span ${localRowSpan.value}`,
+  gridColumn: `${localCol.value} / span ${localColSpan.value}`,
+  gridRow: `${localRow.value} / span ${localRowSpan.value}`,
   backgroundColor: props.color,
 }));
 
@@ -91,31 +97,21 @@ const startDrag = (event: MouseEvent) => {
   const startY = event.clientY;
   const startCol = props.col;
   const startRow = props.row;
-  let lastPreviewCol = startCol;
-  let lastPreviewRow = startRow;
 
-  console.log(
-    `[GRIDCARD] Drag started at (${startX}, ${startY}) from position (${startCol}, ${startRow})`
-  );
   isDragging.value = true;
+  localCol.value = startCol;
+  localRow.value = startRow;
 
   const handleMouseMove = (moveEvent: MouseEvent) => {
     const deltaX = moveEvent.clientX - startX;
     const deltaY = moveEvent.clientY - startY;
 
-    // Calculate new position based on movement (110px per column/row for 2x mouse speed responsiveness)
+    // Calculate new position based on movement (110px per column/row)
     const colChange = Math.round(deltaX / 110);
     const rowChange = Math.round(deltaY / 110);
 
-    const newCol = Math.max(1, startCol + colChange);
-    const newRow = Math.max(1, startRow + rowChange);
-
-    // Track the last preview position
-    lastPreviewCol = newCol;
-    lastPreviewRow = newRow;
-
-    // Emit preview position (card moves in UI but not committed yet)
-    emit("previewMove", { col: newCol, row: newRow });
+    localCol.value = Math.max(1, startCol + colChange);
+    localRow.value = Math.max(1, startRow + rowChange);
   };
 
   const handleMouseUp = () => {
@@ -124,20 +120,9 @@ const startDrag = (event: MouseEvent) => {
 
     isDragging.value = false;
 
-    console.log(
-      `[GRIDCARD] Mouse up - lastPreview: (${lastPreviewCol}, ${lastPreviewRow}), Start: (${startCol}, ${startRow})`
-    );
-
-    // Check if preview position changed from start
-    if (lastPreviewCol !== startCol || lastPreviewRow !== startRow) {
-      console.log(
-        `[GRIDCARD] Emitting MOVE event to (${lastPreviewCol}, ${lastPreviewRow})`
-      );
-      emit("move", { col: lastPreviewCol, row: lastPreviewRow });
-    } else {
-      console.log(`[GRIDCARD] Emitting CANCEL event (no movement)`);
-      // If no movement, cancel the preview and revert
-      emit("cancelPreview");
+    // Only emit move if position actually changed
+    if (localCol.value !== startCol || localRow.value !== startRow) {
+      emit("move", { col: localCol.value, row: localRow.value });
     }
   };
 
@@ -195,15 +180,13 @@ const startResize = (event: MouseEvent) => {
 
 <style scoped>
 .grid-card {
-  border: 2px solid #0f172a;
-  padding: 1.5rem;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.2s ease, opacity 0.1s ease, z-index 0s ease;
+  transition: box-shadow 0.2s ease;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -214,17 +197,18 @@ const startResize = (event: MouseEvent) => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-.grid-card.preview {
-  opacity: 1;
+.grid-card.dragging {
+  opacity: 0.7;
   z-index: 1000;
-  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4);
   border-color: #3b82f6;
+  cursor: grabbing;
 }
 
 .grid-card.resizing {
-  opacity: 1;
+  opacity: 0.8;
   z-index: 1000;
-  box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
   border-color: #22c55e;
 }
 
@@ -244,16 +228,13 @@ const startResize = (event: MouseEvent) => {
   cursor: nwse-resize;
   opacity: 0;
   transition: opacity 0.2s ease;
-  display: none;
 }
 
 .grid-card.edit-mode:hover .resize-handle {
-  display: block;
   opacity: 0.6;
 }
 
 .grid-card.resizing .resize-handle {
-  display: block;
   opacity: 1;
 }
 

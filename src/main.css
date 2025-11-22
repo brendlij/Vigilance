@@ -33,20 +33,5 @@ body {
 
 /* Vue Grid Layout - Grid lines for edit mode */
 .grid-container.edit-mode::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: calc(calc(100% - 24px) / 12) 90px;
-  background-image: linear-gradient(
-      to right,
-      rgba(8, 145, 178, 0.08) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(8, 145, 178, 0.08) 1px, transparent 1px);
-  pointer-events: none;
-  border-radius: 8px;
-  margin: 12px;
+  display: none;
 }

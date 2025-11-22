@@ -1,53 +1,80 @@
 <template>
-  <div class="toolbar">
-    <button
-      class="edit-button"
-      :class="{ active: editMode }"
-      @click="editMode = !editMode"
-      title="Toggle edit mode"
-    >
-      ✏️
+  <!-- Edit Mode Toolbar -->
+  <div v-if="editMode" class="toolbar">
+    <button class="finish-button" @click="finishEditing" title="Finish editing">
+      <Icon icon="mdi:check" />
     </button>
     <button
-      v-if="editMode"
       class="add-button"
       @click="showAddCardModal = true"
       title="Add new card"
     >
-      ➕
+      <Icon icon="mdi:plus" />
     </button>
+
+    <!-- Grid Controls -->
+    <div class="grid-controls">
+      <label>
+        <span>Gap:</span>
+        <input
+          v-model.number="gridGap"
+          type="range"
+          min="0.5"
+          max="3"
+          step="0.1"
+          class="slider"
+        />
+        <span class="value">{{ gridGap.toFixed(1) }}rem</span>
+      </label>
+      <label>
+        <span>Row H:</span>
+        <input
+          v-model.number="baseRowHeight"
+          type="range"
+          min="60"
+          max="200"
+          step="10"
+          class="slider"
+        />
+        <span class="value">{{ adjustedRowHeight }}px</span>
+      </label>
+    </div>
   </div>
 
   <!-- Grid -->
   <div
     class="grid-container"
-    :style="{ gap: `${gridGap}rem`, gridAutoRows: `${rowHeight}px` }"
+    :class="{ 'edit-mode': editMode }"
+    :style="{
+      gap: `${gridGap}rem`,
+      gridAutoRows: `${adjustedRowHeight}px`,
+      '--grid-gap': `${gridGap * 16}px`,
+      '--row-height': `${adjustedRowHeight}px`,
+    }"
   >
+    <!-- Grid cells background (visible in edit mode) -->
+    <template v-if="editMode">
+      <div
+        v-for="i in gridCellCount"
+        :key="`cell-${i}`"
+        class="grid-cell"
+      ></div>
+    </template>
+
     <GridCard
-      v-for="card in cards"
+      v-for="card in cardStore.cards"
       :key="card.id"
       :col="card.col"
       :row="card.row"
       :col-span="card.colSpan"
       :row-span="card.rowSpan"
-      :color="card.color"
-      :min-col-span="card.minColSpan"
-      :max-col-span="card.maxColSpan"
-      :min-row-span="card.minRowSpan"
-      :max-row-span="card.maxRowSpan"
       :edit-mode="editMode"
       :deletable="editMode"
-      @resize="(newSize) => handleResize(card.id, newSize)"
-      @preview-move="(newPos) => handlePreviewMove(card.id, newPos)"
-      @cancel-preview="() => handleCancelPreview(card.id)"
       @move="(newPos) => handleMove(card.id, newPos)"
-      @delete="() => deleteCard(card.id)"
+      @resize="(newSize) => handleResize(card.id, newSize)"
+      @delete="() => cardStore.removeCard(card.id)"
     >
-      <CardRenderer
-        :card="card"
-        :edit-mode="editMode"
-        @update-data="(newData) => updateCardData(card.id, newData)"
-      />
+      <CardRenderer :card="card" :edit-mode="editMode" />
     </GridCard>
   </div>
 
@@ -59,15 +86,10 @@
   >
     <div class="modal" @click.stop>
       <h2>Add New Card</h2>
-      <div class="card-templates">
-        <button
-          v-for="template in CARD_TEMPLATES"
-          :key="template.type"
-          class="template-button"
-          @click="addCard(template)"
-        >
-          <div class="template-name">{{ template.label }}</div>
-          <div class="template-description">{{ template.description }}</div>
+      <div class="card-types">
+        <button class="type-button" @click="addExampleCard">
+          <div class="type-name">Example Card</div>
+          <div class="type-description">A simple example card</div>
         </button>
       </div>
       <button class="modal-close" @click="showAddCardModal = false">
@@ -78,322 +100,170 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { Icon } from "@iconify/vue";
 import GridCard from "@/components/GridCard.vue";
 import CardRenderer from "@/components/CardRenderer.vue";
-import type { Card, CardTemplate } from "@/types/CardTypes";
-import { CARD_TEMPLATES, generateCardId } from "@/types/CardTypes";
+import { useEditMode } from "@/composables/useEditMode";
+import { useCardStore } from "@/stores/cardStore";
 
-// State
-const cards = ref<Card[]>([
-  {
-    id: generateCardId(),
-    type: "ping",
-    col: 1,
-    row: 1,
-    colSpan: 4,
-    rowSpan: 4,
+const { editMode } = useEditMode();
+const cardStore = useCardStore();
+
+const showAddCardModal = ref(false);
+const gridGap = ref(1.5);
+const baseRowHeight = ref(100); // Base height for calculation
+
+// Calculate adjusted row height to maintain square cells
+// As gap increases, cell width decreases, so height should also decrease
+const adjustedRowHeight = computed(() => {
+  // Inverse factor: as gap increases, multiply by smaller number
+  const gapFactor = 1 - gridGap.value * 0.1; // Decreases height as gap increases
+  return Math.round(baseRowHeight.value * Math.max(gapFactor, 0.5)); // Min 50% of base
+});
+
+// Calculate number of grid cells to display
+const gridCellCount = computed(() => {
+  const maxCol = Math.max(...cardStore.cards.map((c) => c.col + c.colSpan), 12);
+  const maxRow = Math.max(...cardStore.cards.map((c) => c.row + c.rowSpan), 10);
+  return maxCol * maxRow;
+});
+
+// Initialize card types
+function initializeCardTypes() {
+  cardStore.registerCardType("example", {
+    defaultColSpan: 3,
+    defaultRowSpan: 3,
     minColSpan: 2,
     maxColSpan: 6,
     minRowSpan: 2,
     maxRowSpan: 6,
-    color: "#fce4ec",
-    data: { url: "8.8.8.8", interval: 5 },
-  },
-  {
-    id: generateCardId(),
-    type: "clock",
-    col: 5,
-    row: 1,
-    colSpan: 2,
-    rowSpan: 1,
-    minColSpan: 2,
-    maxColSpan: 4,
-    minRowSpan: 1,
-    maxRowSpan: 2,
-    color: "#e0e7ff",
-    data: { format: "HH:mm:ss" },
-  },
-]);
+  });
+}
 
-const editMode = ref(false);
-const showAddCardModal = ref(false);
-const gridGap = ref(1.5);
-const rowHeight = ref(120);
+// Add example card
+function addExampleCard() {
+  const nextCol = Math.max(
+    1,
+    Math.max(...cardStore.cards.map((c) => c.col + c.colSpan - 1), 0) + 1
+  );
+  const nextRow = 1;
 
-// Actions
-function addCard(template: CardTemplate) {
-  const nextPos = findNextAvailablePosition(
-    1,
-    1,
-    undefined,
-    template.defaultConfig.colSpan,
-    template.defaultConfig.rowSpan
+  cardStore.addCard(
+    "example",
+    { col: nextCol, row: nextRow },
+    {
+      title: "Example Card",
+      description: "This is an example card",
+    }
   );
 
-  const newCard: Card = {
-    id: generateCardId(),
-    type: template.type,
-    col: nextPos.col,
-    row: nextPos.row,
-    colSpan: template.defaultConfig.colSpan,
-    rowSpan: template.defaultConfig.rowSpan,
-    minColSpan: template.defaultConfig.minColSpan,
-    maxColSpan: template.defaultConfig.maxColSpan,
-    minRowSpan: template.defaultConfig.minRowSpan,
-    maxRowSpan: template.defaultConfig.maxRowSpan,
-    color: generateRandomColor(),
-    data: { ...template.defaultData },
-  };
-
-  cards.value.push(newCard);
   showAddCardModal.value = false;
 }
-function deleteCard(cardId: string) {
-  const index = cards.value.findIndex((c) => c.id === cardId);
-  if (index > -1) {
-    cards.value.splice(index, 1);
-  }
+
+// Handle card movement
+function handleMove(cardId: string, newPos: { col: number; row: number }) {
+  cardStore.updateCardPosition(cardId, newPos.col, newPos.row);
 }
 
-function updateCardData(cardId: string, newData: Record<string, any>) {
-  const card = cards.value.find((c) => c.id === cardId);
-  if (card) {
-    card.data = { ...card.data, ...newData };
-  }
-}
-
-// Collision Detection
-function doRectanglesOverlap(
-  col1: number,
-  row1: number,
-  colSpan1: number,
-  rowSpan1: number,
-  col2: number,
-  row2: number,
-  colSpan2: number,
-  rowSpan2: number
-): boolean {
-  return !(
-    col1 + colSpan1 <= col2 ||
-    col2 + colSpan2 <= col1 ||
-    row1 + rowSpan1 <= row2 ||
-    row2 + rowSpan2 <= row1
-  );
-}
-
-function hasCollisions(cardId: string): boolean {
-  const card = cards.value.find((c) => c.id === cardId);
-  if (!card) return false;
-
-  return cards.value.some(
-    (other) =>
-      other.id !== cardId &&
-      doRectanglesOverlap(
-        card.col,
-        card.row,
-        card.colSpan,
-        card.rowSpan,
-        other.col,
-        other.row,
-        other.colSpan,
-        other.rowSpan
-      )
-  );
-}
-
-function getCollidingCards(cardId: string): string[] {
-  const card = cards.value.find((c) => c.id === cardId);
-  if (!card) return [];
-
-  return cards.value
-    .filter(
-      (other) =>
-        other.id !== cardId &&
-        doRectanglesOverlap(
-          card.col,
-          card.row,
-          card.colSpan,
-          card.rowSpan,
-          other.col,
-          other.row,
-          other.colSpan,
-          other.rowSpan
-        )
-    )
-    .map((c) => c.id);
-}
-
-function findNextAvailablePosition(
-  preferredCol: number,
-  preferredRow: number,
-  excludeCardId?: string,
-  width: number = 1,
-  height: number = 1
-): { col: number; row: number } {
-  for (let row = 1; row <= 50; row++) {
-    for (let col = 1; col <= 12; col++) {
-      // Check if position is within grid bounds
-      if (col + width - 1 > 12) continue;
-
-      const isAvailable = !cards.value.some(
-        (card) =>
-          card.id !== excludeCardId &&
-          doRectanglesOverlap(
-            col,
-            row,
-            width,
-            height,
-            card.col,
-            card.row,
-            card.colSpan,
-            card.rowSpan
-          )
-      );
-
-      if (isAvailable) {
-        return { col, row };
-      }
-    }
-  }
-  return { col: preferredCol, row: preferredRow };
-}
-
+// Handle card resizing
 function handleResize(
   cardId: string,
   newSize: { colSpan: number; rowSpan: number }
 ) {
-  const card = cards.value.find((c) => c.id === cardId);
-  if (!card) return;
-
-  card.colSpan = newSize.colSpan;
-  card.rowSpan = newSize.rowSpan;
-
-  if (hasCollisions(cardId)) {
-    const colliding = getCollidingCards(cardId);
-    colliding.forEach((collidingId) => {
-      const collidingCard = cards.value.find((c) => c.id === collidingId);
-      if (collidingCard) {
-        const nextPos = findNextAvailablePosition(
-          collidingCard.col,
-          collidingCard.row,
-          collidingId,
-          collidingCard.colSpan,
-          collidingCard.rowSpan
-        );
-        collidingCard.col = nextPos.col;
-        collidingCard.row = nextPos.row;
-      }
-    });
-  }
+  cardStore.updateCardSize(cardId, newSize.colSpan, newSize.rowSpan);
 }
 
-function handlePreviewMove(
-  cardId: string,
-  newPos: { col: number; row: number }
-) {
-  const card = cards.value.find((c) => c.id === cardId);
-  if (card) {
-    card.col = newPos.col;
-    card.row = newPos.row;
-  }
+// Finish editing
+function finishEditing() {
+  editMode.value = false;
 }
 
-function handleCancelPreview(cardId: string) {
-  // GridCard handles this internally
-}
-
-function handleMove(cardId: string, newPos: { col: number; row: number }) {
-  const card = cards.value.find((c) => c.id === cardId);
-  if (!card) return;
-
-  card.col = newPos.col;
-  card.row = newPos.row;
-
-  if (hasCollisions(cardId)) {
-    const colliding = getCollidingCards(cardId);
-    colliding.forEach((collidingId) => {
-      const collidingCard = cards.value.find((c) => c.id === collidingId);
-      if (collidingCard) {
-        const nextPos = findNextAvailablePosition(
-          collidingCard.col,
-          collidingCard.row,
-          collidingId,
-          collidingCard.colSpan,
-          collidingCard.rowSpan
-        );
-        collidingCard.col = nextPos.col;
-        collidingCard.row = nextPos.row;
-      }
-    });
-  }
-}
-
-function generateRandomColor(): string {
-  const colors = [
-    "#fce4ec",
-    "#f3e5f5",
-    "#e3f2fd",
-    "#e0f2f1",
-    "#e8f5e9",
-    "#fff9c4",
-    "#ffe0b2",
-    "#ffccbc",
-    "#f1f8e9",
-    "#fef3c7",
-  ];
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex] || "#fce4ec";
-}
+// Initialize on mount
+onMounted(() => {
+  cardStore.loadCards();
+  initializeCardTypes();
+});
 </script>
 
 <style scoped>
 .toolbar {
-  position: fixed;
-  top: 75px;
-  right: 1rem;
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
   display: flex;
-  gap: 0.5rem;
-  z-index: 1002;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.edit-button,
+.finish-button,
 .add-button {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  background: white;
+  border: none;
+  border-radius: 4px;
+  background: rgba(100, 100, 100, 0.7);
   cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.edit-button:hover,
-.add-button:hover {
-  border-color: #999;
-  background: #f9f9f9;
-}
-
-.edit-button.active {
-  background: #ff6b6b;
   color: white;
-  border-color: #ff6b6b;
+  flex-shrink: 0;
 }
 
-.add-button {
-  background: #51cf66;
-  color: white;
-  border-color: #51cf66;
-}
-
+.finish-button:hover,
 .add-button:hover {
-  background: #37b24d;
-  border-color: #37b24d;
+  background: rgba(80, 80, 80, 0.9);
+}
+
+.finish-button:active,
+.add-button:active {
+  transform: scale(0.95);
+}
+
+.grid-controls {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0 0.5rem;
+  border-left: 1px solid #ddd;
+  padding-left: 1rem;
+}
+
+.grid-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  white-space: nowrap;
+}
+
+.grid-controls span:first-child {
+  min-width: 50px;
+}
+
+.slider {
+  width: 100px;
+  height: 4px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.value {
+  min-width: 50px;
+  text-align: right;
+  font-weight: 600;
+  color: #333;
 }
 
 .grid-container {
@@ -401,6 +271,12 @@ function generateRandomColor(): string {
   grid-template-columns: repeat(12, 1fr);
   overflow: visible;
   padding: 1rem;
+  position: relative;
+}
+
+.grid-cell {
+  border: 1px solid rgba(8, 145, 178, 0.2);
+  pointer-events: none;
 }
 
 /* Modal */
@@ -412,70 +288,72 @@ function generateRandomColor(): string {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 2000;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .modal {
   background: white;
+  border-radius: 8px;
   padding: 2rem;
-  border-radius: 12px;
+  min-width: 300px;
   max-width: 500px;
-  width: 90%;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .modal h2 {
-  margin: 0 0 1.5rem 0;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
   color: #333;
 }
 
-.card-templates {
+.card-types {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
-.template-button {
+.type-button {
   padding: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
   background: white;
   cursor: pointer;
   text-align: left;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
-.template-button:hover {
-  border-color: #51cf66;
-  background: #f9fff9;
+.type-button:hover {
+  border-color: #667eea;
+  background: #f8f9ff;
 }
 
-.template-name {
+.type-name {
   font-weight: 600;
   color: #333;
   margin-bottom: 0.25rem;
 }
 
-.template-description {
+.type-description {
   font-size: 0.85rem;
-  color: #666;
+  color: #999;
 }
 
 .modal-close {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.7rem;
   border: none;
-  background: #eee;
   border-radius: 6px;
+  background: #f0f0f0;
+  color: #333;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
 .modal-close:hover {
-  background: #ddd;
+  background: #e0e0e0;
 }
 </style>
