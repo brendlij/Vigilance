@@ -48,21 +48,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 interface Props {
   editMode?: boolean;
+  data?: {
+    url?: string;
+    interval?: number;
+  };
 }
 
-withDefaults(defineProps<Props>(), {
+interface Emits {
+  "update-data": [data: Record<string, any>];
+}
+
+const props = withDefaults(defineProps<Props>(), {
   editMode: false,
+  data: () => ({ url: "google.com", interval: 5 }),
 });
 
-const target = ref("google.com");
+const emit = defineEmits<Emits>();
+
+const target = ref(props.data?.url || "google.com");
+const interval = ref(props.data?.interval || 5);
 const isPinging = ref(false);
 const currentPing = ref(0);
 const pings = ref<number[]>([]);
 let pingInterval: number | null = null;
+
+// Watch for data changes
+watch(
+  () => props.data,
+  (newData) => {
+    if (newData?.url) target.value = newData.url;
+    if (newData?.interval) interval.value = newData.interval;
+  },
+  { deep: true }
+);
+
+// Emit data changes
+watch([target, interval], () => {
+  emit("update-data", {
+    url: target.value,
+    interval: interval.value,
+  });
+});
 
 const statusClass = computed(() => {
   if (!isPinging.value) return "idle";
@@ -87,7 +117,6 @@ const avgPing = computed(() => {
 });
 
 const simulatePing = () => {
-  // Simulate ping response (100-300ms with some randomness)
   const basePing = 100 + Math.random() * 150;
   const jitter = (Math.random() - 0.5) * 50;
   const ping = Math.max(10, Math.round(basePing + jitter));
@@ -95,7 +124,6 @@ const simulatePing = () => {
   currentPing.value = ping;
   pings.value.push(ping);
 
-  // Keep last 20 pings
   if (pings.value.length > 20) {
     pings.value.shift();
   }
@@ -103,21 +131,17 @@ const simulatePing = () => {
 
 const togglePing = () => {
   if (isPinging.value) {
-    // Stop pinging
     if (pingInterval !== null) {
       clearInterval(pingInterval);
       pingInterval = null;
     }
     isPinging.value = false;
   } else {
-    // Start pinging
     isPinging.value = true;
     pings.value = [];
     currentPing.value = 0;
 
-    // Ping every 1 second
-    pingInterval = window.setInterval(simulatePing, 1000);
-    // Initial ping
+    pingInterval = window.setInterval(simulatePing, interval.value * 1000);
     simulatePing();
   }
 };

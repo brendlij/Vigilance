@@ -373,6 +373,13 @@ const handleOutsideClick = (event: MouseEvent) => {
   background-color: #e0f5f8;
   border-bottom: 1px solid #eee;
   border-radius: 2em;
+  position: fixed;
+  top: 1em;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .container {

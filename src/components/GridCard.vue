@@ -9,9 +9,19 @@
     }"
     @mousedown="startDrag"
   >
+    <button
+      v-if="deletable"
+      class="delete-button"
+      @click.stop="emit('delete')"
+      title="Delete card"
+    >
+      ✕
+    </button>
+
     <slot>
       <p>Card Content</p>
     </slot>
+
     <div class="resize-handle" @mousedown.stop="startResize"></div>
   </div>
 </template>
@@ -30,6 +40,7 @@ interface Props {
   minRowSpan?: number;
   maxRowSpan?: number;
   editMode?: boolean;
+  deletable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -42,6 +53,8 @@ const props = withDefaults(defineProps<Props>(), {
   maxColSpan: 12,
   minRowSpan: 1,
   maxRowSpan: 10,
+  editMode: false,
+  deletable: false,
 });
 
 const emit = defineEmits<{
@@ -49,6 +62,7 @@ const emit = defineEmits<{
   move: [{ col: number; row: number }];
   previewMove: [{ col: number; row: number }];
   cancelPreview: [];
+  delete: [];
 }>();
 
 const localColSpan = ref(props.colSpan);
@@ -245,5 +259,35 @@ const startResize = (event: MouseEvent) => {
 
 .resize-handle:active {
   opacity: 1;
+}
+
+.delete-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: #ff4444;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-card.edit-mode:hover .delete-button {
+  opacity: 1;
+}
+
+.delete-button:hover {
+  background: #cc0000;
 }
 </style>

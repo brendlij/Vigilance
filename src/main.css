@@ -12,11 +12,14 @@ body {
     Oxygen, Ubuntu, Cantarell, sans-serif;
   background-color: #dbddfa;
   color: #333;
+  overflow-x: auto;
 }
 
 #app {
   min-height: 100vh;
   padding: clamp(1rem, 2vw, 1.75rem);
+  overflow-y: scroll;
+  padding-top: 80px;
 }
 
 /* Vue Grid Layout - Placeholder styling */
