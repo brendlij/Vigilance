@@ -55,10 +55,6 @@
         :col-span="card.colSpan"
         :row-span="card.rowSpan"
         :color="card.color"
-        :min-col-span="card.minColSpan"
-        :max-col-span="card.maxColSpan"
-        :min-row-span="card.minRowSpan"
-        :max-row-span="card.maxRowSpan"
         :edit-mode="editMode"
         @resize="(newSize) => handleResize(index, newSize)"
         @preview-move="(newPos) => handlePreviewMove(index, newPos)"
@@ -90,10 +86,6 @@ interface Card {
   rowSpan: number;
   label: string;
   color: string;
-  minColSpan?: number;
-  maxColSpan?: number;
-  minRowSpan?: number;
-  maxRowSpan?: number;
   isCustom?: boolean;
 }
 
@@ -112,10 +104,6 @@ const cards = ref<Card[]>([
     rowSpan: 1,
     label: "Card 1x1",
     color: "#fecaca",
-    minColSpan: 1,
-    maxColSpan: 2,
-    minRowSpan: 1,
-    maxRowSpan: 2,
   },
   {
     col: 2,
@@ -124,10 +112,6 @@ const cards = ref<Card[]>([
     rowSpan: 1,
     label: "Card 2x1",
     color: "#fed7aa",
-    minColSpan: 2,
-    maxColSpan: 4,
-    minRowSpan: 1,
-    maxRowSpan: 3,
   },
   {
     col: 4,
@@ -136,10 +120,6 @@ const cards = ref<Card[]>([
     rowSpan: 2,
     label: "Card 1x2",
     color: "#fef08a",
-    minColSpan: 1,
-    maxColSpan: 1,
-    minRowSpan: 1,
-    maxRowSpan: 3,
   },
   {
     col: 1,
@@ -148,10 +128,6 @@ const cards = ref<Card[]>([
     rowSpan: 1,
     label: "Card 1x1",
     color: "#bbf7d0",
-    minColSpan: 1,
-    maxColSpan: 2,
-    minRowSpan: 1,
-    maxRowSpan: 2,
   },
   {
     col: 2,
@@ -160,10 +136,6 @@ const cards = ref<Card[]>([
     rowSpan: 1,
     label: "Card 2x1",
     color: "#a5f3fc",
-    minColSpan: 1,
-    maxColSpan: 3,
-    minRowSpan: 1,
-    maxRowSpan: 2,
   },
   {
     col: 1,
@@ -172,10 +144,6 @@ const cards = ref<Card[]>([
     rowSpan: 1,
     label: "Card 3x1",
     color: "#c4b5fd",
-    minColSpan: 2,
-    maxColSpan: 4,
-    minRowSpan: 1,
-    maxRowSpan: 2,
   },
   {
     col: 7,
@@ -184,10 +152,6 @@ const cards = ref<Card[]>([
     rowSpan: 4,
     label: "Ping Monitor",
     color: "#fef3c7",
-    minColSpan: 2,
-    maxColSpan: 4,
-    minRowSpan: 2,
-    maxRowSpan: 4,
     isCustom: true,
   },
 ]);
