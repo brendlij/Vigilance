@@ -343,6 +343,23 @@ const handleMove = (
       }
     });
   }
+
+  // Scroll card into view after all collisions are resolved
+  setTimeout(() => {
+    const gridContainer = document.querySelector(
+      ".grid-container"
+    ) as HTMLElement;
+    if (gridContainer) {
+      const cardIndex = cards.value.indexOf(movingCard);
+      const cards_dom = gridContainer.querySelectorAll(".grid-card");
+      if (cards_dom[cardIndex]) {
+        cards_dom[cardIndex].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }
+    }
+  }, 0);
 };
 </script>
 

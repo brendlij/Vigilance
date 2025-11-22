@@ -64,9 +64,9 @@ const startDrag = (event: MouseEvent) => {
     const deltaX = moveEvent.clientX - startX;
     const deltaY = moveEvent.clientY - startY;
 
-    // Calculate new position based on movement (approximately 220px per column, 170px per row)
-    const colChange = Math.round(deltaX / 220);
-    const rowChange = Math.round(deltaY / 170);
+    // Calculate new position based on movement (110px per column/row for 2x mouse speed responsiveness)
+    const colChange = Math.round(deltaX / 110);
+    const rowChange = Math.round(deltaY / 110);
 
     const newCol = Math.max(1, startCol + colChange);
     const newRow = Math.max(1, startRow + rowChange);
@@ -95,9 +95,9 @@ const startResize = (event: MouseEvent) => {
     const deltaX = moveEvent.clientX - startX;
     const deltaY = moveEvent.clientY - startY;
 
-    // Calculate new spans based on movement (approximately 220px per column/row)
-    const colChange = Math.round(deltaX / 220);
-    const rowChange = Math.round(deltaY / 170);
+    // Calculate new spans based on movement (110px per column/row for 2x mouse speed responsiveness)
+    const colChange = Math.round(deltaX / 110);
+    const rowChange = Math.round(deltaY / 110);
 
     // Apply min/max constraints
     localColSpan.value = Math.max(
