@@ -77,9 +77,6 @@ const triggerBlink = () => {
   // Close eyes for 150ms
   setTimeout(() => {
     isBlinking.value = false;
-
-    // Schedule next blink (Random between 2s and 6s)
-    scheduleNextBlink();
   }, 150);
 };
 
@@ -88,12 +85,19 @@ const scheduleNextBlink = () => {
 
   // 10% chance of a double blink for realism
   if (Math.random() > 0.9) {
-    setTimeout(() => {
+    blinkTimeout = setTimeout(() => {
       triggerBlink();
-      setTimeout(triggerBlink, 300); // Second blink shortly after
+      setTimeout(() => {
+        triggerBlink();
+        // Schedule next blink after double blink completes
+        scheduleNextBlink();
+      }, 300); // Second blink shortly after
     }, randomDelay);
   } else {
-    blinkTimeout = setTimeout(triggerBlink, randomDelay);
+    blinkTimeout = setTimeout(() => {
+      triggerBlink();
+      scheduleNextBlink();
+    }, randomDelay);
   }
 };
 
@@ -156,7 +160,7 @@ onUnmounted(() => {
   gap: 0.5rem;
   font-family: sans-serif;
   position: relative;
-  padding-bottom: 20px;
+  padding-bottom: -20px;
 }
 
 /* --- Face Base --- */
@@ -236,17 +240,17 @@ onUnmounted(() => {
   top: 40px;
 }
 .blush.left {
-  left: 12px;
+  left: 8px;
 }
 .blush.right {
-  right: 12px;
+  right: 8px;
 }
 
 /* --- Speech Bubble --- */
 .speech-bubble {
   position: absolute;
   top: calc(100% - 8px);
-  left: 50%;
+  left: calc(50% + 40px);
   transform: translateX(-50%);
   background-color: #fff;
   border: 2px solid #7bbbb0;
@@ -258,7 +262,7 @@ onUnmounted(() => {
   box-shadow: 0 4px 12px rgba(123, 187, 176, 0.15);
   animation: float 3s ease-in-out infinite;
   z-index: 10;
-  margin-top: 8px;
+  margin-top: 18px;
   white-space: normal;
   word-wrap: break-word;
 }
@@ -300,7 +304,7 @@ onUnmounted(() => {
 .bubble-pointer {
   position: absolute;
   top: -7.5px;
-  left: 50%;
+  left: calc(50% - 40px);
   width: 12px;
   height: 12px;
   background-color: #fff;
