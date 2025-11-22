@@ -1,9 +1,9 @@
 <template>
-  <div class="grid-card" :style="cardStyle" @mousedown.stop>
+  <div class="grid-card" :style="cardStyle" @mousedown="startDrag">
     <slot>
       <p>Card Content</p>
     </slot>
-    <div class="resize-handle" @mousedown="startResize"></div>
+    <div class="resize-handle" @mousedown.stop="startResize"></div>
   </div>
 </template>
 
@@ -36,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   resize: [{ colSpan: number; rowSpan: number }];
+  move: [{ col: number; row: number }];
 }>();
 
 const localColSpan = ref(props.colSpan);
@@ -46,6 +47,42 @@ const cardStyle = computed(() => ({
   gridRow: `${props.row} / span ${localRowSpan.value}`,
   backgroundColor: props.color,
 }));
+
+const startDrag = (event: MouseEvent) => {
+  // Don't drag if clicking on resize handle
+  if ((event.target as HTMLElement).classList.contains("resize-handle")) {
+    return;
+  }
+
+  event.preventDefault();
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const startCol = props.col;
+  const startRow = props.row;
+
+  const handleMouseMove = (moveEvent: MouseEvent) => {
+    const deltaX = moveEvent.clientX - startX;
+    const deltaY = moveEvent.clientY - startY;
+
+    // Calculate new position based on movement (approximately 220px per column, 170px per row)
+    const colChange = Math.round(deltaX / 220);
+    const rowChange = Math.round(deltaY / 170);
+
+    const newCol = Math.max(1, startCol + colChange);
+    const newRow = Math.max(1, startRow + rowChange);
+
+    // Emit the new position
+    emit("move", { col: newCol, row: newRow });
+  };
+
+  const handleMouseUp = () => {
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
+  };
+
+  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("mouseup", handleMouseUp);
+};
 
 const startResize = (event: MouseEvent) => {
   event.preventDefault();

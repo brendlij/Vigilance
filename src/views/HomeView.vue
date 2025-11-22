@@ -46,6 +46,7 @@
         :min-row-span="card.minRowSpan"
         :max-row-span="card.maxRowSpan"
         @resize="(newSize) => handleResize(index, newSize)"
+        @move="(newPos) => handleMove(index, newPos)"
       >
         <div class="card-content">
           <div class="card-label">{{ card.label }}</div>
@@ -233,6 +234,73 @@ const handleResize = (
   let hasCollisions = true;
   let iterations = 0;
   const maxIterations = 10; // Prevent infinite loops
+
+  while (hasCollisions && iterations < maxIterations) {
+    hasCollisions = false;
+    iterations++;
+
+    cards.value.forEach((card, index) => {
+      if (index !== cardIndex) {
+        // Check if this card collides with any other card
+        let collides = false;
+        cards.value.forEach((otherCard, otherIndex) => {
+          if (index !== otherIndex) {
+            if (
+              doRectanglesOverlap(
+                card.col,
+                card.row,
+                card.colSpan,
+                card.rowSpan,
+                otherCard.col,
+                otherCard.row,
+                otherCard.colSpan,
+                otherCard.rowSpan
+              )
+            ) {
+              collides = true;
+            }
+          }
+        });
+
+        if (collides) {
+          // Find next available position for this card
+          const nextPos = findNextAvailablePosition(
+            card.colSpan,
+            card.rowSpan,
+            index
+          );
+          card.col = nextPos.col;
+          card.row = nextPos.row;
+          hasCollisions = true;
+        }
+      }
+    });
+  }
+};
+
+const handleMove = (
+  cardIndex: number,
+  newPos: { col: number; row: number }
+) => {
+  const movingCard = cards.value[cardIndex];
+  if (!movingCard) return;
+
+  // Update the card position
+  movingCard.col = newPos.col;
+  movingCard.row = newPos.row;
+
+  // Check grid boundaries - keep card within grid
+  if (movingCard.col + movingCard.colSpan - 1 > 12) {
+    movingCard.col = Math.max(1, 12 - movingCard.colSpan + 1);
+  }
+  if (movingCard.col < 1) {
+    movingCard.col = 1;
+  }
+
+  // Keep resolving collisions until there are none
+  let hasCollisions = true;
+  let iterations = 0;
+  const maxIterations = 10;
 
   while (hasCollisions && iterations < maxIterations) {
     hasCollisions = false;
