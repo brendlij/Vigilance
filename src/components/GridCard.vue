@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 interface Props {
   row?: number;
@@ -76,10 +76,47 @@ const localRow = ref(props.row);
 const isDragging = ref(false);
 const isResizing = ref(false);
 
+// Watch for prop changes and update local state
+watch(
+  () => props.col,
+  (newCol) => {
+    if (!isDragging.value) {
+      localCol.value = newCol;
+    }
+  }
+);
+
+watch(
+  () => props.row,
+  (newRow) => {
+    if (!isDragging.value) {
+      localRow.value = newRow;
+    }
+  }
+);
+
+watch(
+  () => props.colSpan,
+  (newSpan) => {
+    if (!isResizing.value) {
+      localColSpan.value = newSpan;
+    }
+  }
+);
+
+watch(
+  () => props.rowSpan,
+  (newSpan) => {
+    if (!isResizing.value) {
+      localRowSpan.value = newSpan;
+    }
+  }
+);
+
 const cardStyle = computed(() => ({
   gridColumn: `${localCol.value} / span ${localColSpan.value}`,
   gridRow: `${localRow.value} / span ${localRowSpan.value}`,
-  backgroundColor: props.color,
+  backgroundColor: "transparent",
 }));
 
 const startDrag = (event: MouseEvent) => {
@@ -113,7 +150,6 @@ const startDrag = (event: MouseEvent) => {
     localCol.value = Math.max(1, startCol + colChange);
     localRow.value = Math.max(1, startRow + rowChange);
   };
-
   const handleMouseUp = () => {
     window.removeEventListener("mousemove", handleMouseMove);
     window.removeEventListener("mouseup", handleMouseUp);
@@ -180,7 +216,7 @@ const startResize = (event: MouseEvent) => {
 
 <style scoped>
 .grid-card {
-  border-radius: 0.5rem;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;

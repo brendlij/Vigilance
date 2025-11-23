@@ -205,10 +205,7 @@ const handleOutsideClick = (event: MouseEvent) => {
 <template>
   <header class="header">
     <div class="container">
-      <RobotFace
-        emotion="smiling"
-        speech="Hello! How can I assist you today?"
-      />
+      <RobotFace emotion="smiling" />
       <h1 class="logo" @click="router.push('/')">Vigilance</h1>
 
       <div class="time">{{ currentTime }}</div>
@@ -381,16 +378,15 @@ const handleOutsideClick = (event: MouseEvent) => {
 
 <style scoped>
 .header {
-  background-color: #e0f5f8;
-  border-bottom: 1px solid #eee;
-  border-radius: 2em;
+  background: var(--primary);
+  border: none;
+  border-radius: 20px;
   position: fixed;
   top: 1em;
-  left: 0;
-  right: 0;
+  left: clamp(1rem, 2vw, 1.75rem);
+  right: clamp(1rem, 2vw, 1.75rem);
   z-index: 1001;
-  margin-left: 1em;
-  margin-right: 1em;
+  width: calc(100% - 2 * clamp(1rem, 2vw, 1.75rem));
 }
 
 .container {
@@ -407,15 +403,17 @@ const handleOutsideClick = (event: MouseEvent) => {
   font-size: 1.5rem;
   font-weight: 500;
   cursor: pointer;
-  color: #333333;
+  color: var(--text-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .time {
-  color: #999;
+  color: var(--text-light);
   font-size: 1rem;
   font-weight: 500;
   flex: 1;
   text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .menu-section {
@@ -443,29 +441,29 @@ const handleOutsideClick = (event: MouseEvent) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #666;
+  color: var(--text-primary);
   font-weight: 500;
   transition: color 0.2s;
 }
 
 .weather-toggle:hover {
-  color: #333;
+  color: var(--accent-light);
 }
 
 .weather-icon {
   width: 24px;
   height: 24px;
-  color: #666;
+  color: var(--text-primary);
 }
 
 .weather-icon-large {
   width: 48px;
   height: 48px;
-  color: #666;
+  color: var(--accent-light);
 }
 
 .weather-text {
-  color: #666;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 0.9rem;
 }
@@ -474,25 +472,25 @@ const handleOutsideClick = (event: MouseEvent) => {
   position: absolute;
   top: 100%;
   left: -100px;
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 0.5rem;
+  background: var(--primary);
+  border: none;
+  border-radius: 20px;
   width: 350px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-top: 0.5rem;
   z-index: 1000;
 }
 
 .weather-header {
   padding: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .weather-header h3 {
   font-size: 0.95rem;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
   font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .weather-content {
@@ -585,20 +583,20 @@ const handleOutsideClick = (event: MouseEvent) => {
 .icon {
   width: 24px;
   height: 24px;
-  color: #666;
+  color: var(--text-primary);
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .bell-toggle:hover .icon {
-  color: #333;
+  color: var(--accent-light);
 }
 
 .notification-badge {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #ff4444;
+  background-color: var(--accent);
   color: white;
   border-radius: 50%;
   width: 20px;
@@ -614,11 +612,10 @@ const handleOutsideClick = (event: MouseEvent) => {
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 0.5rem;
+  background: var(--primary);
+  border: none;
+  border-radius: 20px;
   width: 300px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-top: 0.5rem;
   z-index: 1000;
 }
@@ -628,14 +625,15 @@ const handleOutsideClick = (event: MouseEvent) => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .notifications-header h3 {
   font-size: 0.95rem;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
   font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .notifications-list {
@@ -759,34 +757,33 @@ const handleOutsideClick = (event: MouseEvent) => {
 .menu-icon {
   width: 24px;
   height: 24px;
-  color: #666;
+  color: var(--text-primary);
   transition: color 0.2s;
 }
 
 .dropdown-toggle:hover .menu-icon {
-  color: #333;
+  color: var(--accent-light);
 }
 
 .nav {
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 0.5rem;
+  background: var(--primary);
+  border: none;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   gap: 0;
   padding: 0.5rem 0;
   min-width: 150px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-top: 0.5rem;
   z-index: 1000;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #666;
+  color: var(--text-light);
   font-weight: 500;
   transition: background-color 0.2s;
   display: block;
@@ -797,21 +794,23 @@ const handleOutsideClick = (event: MouseEvent) => {
   text-align: left;
   cursor: pointer;
   width: 100%;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .nav-link:hover {
-  background-color: #f9f9f9;
-  color: #333;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
 }
 
 .nav-link.edit-toggle {
-  color: #666;
+  color: var(--text-light);
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .nav-link.edit-toggle:hover {
-  background-color: #f9f9f9;
-  color: #333;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
 }
 
 .nav-divider {

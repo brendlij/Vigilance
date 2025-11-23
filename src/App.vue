@@ -13,7 +13,6 @@ import Header from "./components/header.vue";
 <style scoped>
 .page-shell {
   width: min(1800px, 100%);
-  margin: clamp(2rem, 4vw, 3.5rem) auto 4rem;
   padding: clamp(1.5rem, 2.5vw, 2.75rem);
 }
 

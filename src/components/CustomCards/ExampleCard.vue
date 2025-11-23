@@ -91,16 +91,15 @@ function saveSettings() {
 
 <style scoped>
 .example-card {
-  border: 1px solid #333;
+  border: none;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #4a90e2;
-  color: white;
+  background: var(--primary-light);
+  color: var(--text-primary);
   padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
 }
 
 .card-header {
@@ -108,7 +107,7 @@ function saveSettings() {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--border-light);
   padding-bottom: 0.5rem;
 }
 
